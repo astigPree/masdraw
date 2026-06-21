@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_title %}Terms of Use | MasDraw{% endblock %}
+{% block page_description %}Read the terms of use for MasDraw, including rules for public drawings, anonymous usage, and responsible content sharing.{% endblock %}
+{% block canonical_url %}{{ request.scheme }}://{{ request.get_host }}{% url 'terms' %}{% endblock %}
+{% block og_title %}Terms of Use | MasDraw{% endblock %}
+{% block og_description %}Read the terms of use for MasDraw, including rules for public drawings, anonymous usage, and responsible content sharing.{% endblock %}
+{% block og_url %}{{ request.scheme }}://{{ request.get_host }}{% url 'terms' %}{% endblock %}
+{% block twitter_title %}Terms of Use | MasDraw{% endblock %}
+{% block twitter_description %}Read the terms of use for MasDraw, including rules for public drawings, anonymous usage, and responsible content sharing.{% endblock %}
+{% block body_class %}seo-landing-page legal-page{% endblock %}
+
+{% block content %}
+    <section class="section">
+        <div class="container">
+            <div class="section-heading">
+                <p class="section-kicker">Legal</p>
+                <h1>Terms of Use</h1>
+                <p>Last updated: May 11, 2026</p>
+            </div>
+
+            <div class="legal-content card">
+                <h2>Acceptance of Terms</h2>
+                <p>
+                    By accessing and using MasDraw (<a href="{% url 'home' %}">https://masdraw.masbate.top</a>), you agree to
+                    be bound by these Terms of Use. If you do not agree, please do not use the platform.
+                </p>
+
+                <h2>Description of Service</h2>
+                <p>
+                    MasDraw is a free anonymous online drawing platform that allows users to create digital drawings,
+                    save them privately using a recovery key, and optionally publish selected drawings to a public showcase.
+                    No account registration is required.
+                </p>
+
+                <h2>Anonymous Usage</h2>
+                <p>
+                    MasDraw is designed for anonymous use. You do not need to provide any personal information to create
+                    or save drawings. A recovery key is provided for each drawing session and serves as the only way to
+                    access your work. You are responsible for keeping your recovery key safe.
+                </p>
+
+                <h2>User Content</h2>
+                <p>You retain ownership of the drawings you create on MasDraw. By publishing a drawing to the public showcase, you grant MasDraw a non-exclusive license to display your artwork on the platform. You agree that:</p>
+                <ul>
+                    <li>You will not create or publish drawings that contain illegal, harmful, or offensive content</li>
+                    <li>You will not use MasDraw to harass, threaten, or harm others</li>
+                    <li>You will not upload copyrighted material that you do not have the right to share</li>
+                    <li>You understand that published drawings are visible to all visitors</li>
+                </ul>
+
+                <h2>Content Moderation</h2>
+                <p>
+                    MasDraw reserves the right to remove any published drawing that violates these terms or is deemed
+                    inappropriate, offensive, or harmful. We may also remove drawings at our discretion to maintain
+                    the quality and safety of the public showcase.
+                </p>
+
+                <h2>Recovery Keys</h2>
+                <p>
+                    Recovery keys are generated automatically and shown once when a drawing is created. MasDraw does not
+                    store plain-text recovery keys and cannot retrieve them if lost. You are solely responsible for saving
+                    your recovery key. Lost keys cannot be recovered.
+                </p>
+
+                <h2>Rate Limiting</h2>
+                <p>
+                    To prevent abuse, MasDraw limits the number of drawings that can be created from a single network
+                    within a given time period. If you reach a rate limit, you will need to wait before creating new drawings.
+                </p>
+
+                <h2>Disclaimer of Warranties</h2>
+                <p>
+                    MasDraw is provided "as is" without warranties of any kind, express or implied. We do not guarantee
+                    that the service will be uninterrupted, error-free, or that your drawings will be permanently stored.
+                    Use MasDraw at your own risk.
+                </p>
+
+                <h2>Limitation of Liability</h2>
+                <p>
+                    MasDraw and its operators are not liable for any damages arising from your use of the platform,
+                    including but not limited to loss of drawings, loss of recovery keys, or any issues related to
+                    published content.
+                </p>
+
+                <h2>Changes to Terms</h2>
+                <p>
+                    We may update these Terms of Use from time to time. Changes will be posted on this page with an
+                    updated revision date. Continued use of MasDraw after changes constitutes acceptance of the new terms.
+                </p>
+
+                <h2>Contact</h2>
+                <p>
+                    If you have questions about these Terms of Use, you can reach us through the website at
+                    <a href="{% url 'home' %}">https://masdraw.masbate.top</a>.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="cta-strip">
+                <div>
+                    <h2>Start creating on MasDraw</h2>
+                    <p>Free, anonymous, and simple online drawing.</p>
+                </div>
+                <a class="button button-secondary" href="{% url 'home' %}">Go to Homepage</a>
+            </div>
+        </div>
+    </section>
+{% endblock %}

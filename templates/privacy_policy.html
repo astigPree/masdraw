@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_title %}Privacy Policy | MasDraw{% endblock %}
+{% block page_description %}Read the MasDraw privacy policy and learn how anonymous drawings, recovery keys, and user privacy are handled.{% endblock %}
+{% block canonical_url %}{{ request.scheme }}://{{ request.get_host }}{% url 'privacy_policy' %}{% endblock %}
+{% block og_title %}Privacy Policy | MasDraw{% endblock %}
+{% block og_description %}Read the MasDraw privacy policy and learn how anonymous drawings, recovery keys, and user privacy are handled.{% endblock %}
+{% block og_url %}{{ request.scheme }}://{{ request.get_host }}{% url 'privacy_policy' %}{% endblock %}
+{% block twitter_title %}Privacy Policy | MasDraw{% endblock %}
+{% block twitter_description %}Read the MasDraw privacy policy and learn how anonymous drawings, recovery keys, and user privacy are handled.{% endblock %}
+{% block body_class %}seo-landing-page legal-page{% endblock %}
+
+{% block content %}
+    <section class="section">
+        <div class="container">
+            <div class="section-heading">
+                <p class="section-kicker">Legal</p>
+                <h1>Privacy Policy</h1>
+                <p>Last updated: May 11, 2026</p>
+            </div>
+
+            <div class="legal-content card">
+                <h2>Introduction</h2>
+                <p>
+                    MasDraw ("we", "us", "our") operates the website <a href="{% url 'home' %}">https://masdraw.masbate.top</a>.
+                    This Privacy Policy explains how we handle information when you use our anonymous drawing platform.
+                    We are committed to protecting your privacy and keeping MasDraw as transparent as possible.
+                </p>
+
+                <h2>Information We Collect</h2>
+                <p>MasDraw is designed to be anonymous. We do not require accounts, email addresses, or personal identification. Here is what we collect:</p>
+                <ul>
+                    <li><strong>Drawing data:</strong> The artwork you create on the canvas, including strokes, shapes, text, and a preview image, is stored on our server so you can save and return to your work.</li>
+                    <li><strong>Recovery keys:</strong> A hashed version of your recovery key is stored so you can recover your drawing later. We do not store the plain-text recovery key after it is first shown to you.</li>
+                    <li><strong>Browser cookie:</strong> A browser token cookie is used to associate your browser session with your most recent drawing for convenience. This cookie does not identify you personally.</li>
+                    <li><strong>IP address:</strong> We use hashed IP addresses for rate-limiting purposes to prevent abuse. We do not store raw IP addresses or link them to your drawings.</li>
+                    <li><strong>Server logs:</strong> Standard web server logs may include IP addresses, browser type, and request timestamps. These are used for security and debugging only.</li>
+                </ul>
+
+                <h2>How We Use Your Information</h2>
+                <p>We use the information collected to:</p>
+                <ul>
+                    <li>Store and serve your drawings when you access them</li>
+                    <li>Provide the recovery key system for anonymous drawing access</li>
+                    <li>Prevent abuse through rate limiting</li>
+                    <li>Display published drawings in the public showcase</li>
+                    <li>Maintain and improve the platform</li>
+                </ul>
+
+                <h2>Publishing Drawings</h2>
+                <p>
+                    Drawings are private by default. When you choose to publish a drawing, it becomes publicly visible
+                    in the <a href="{% url 'showcase' %}">MasDraw showcase</a>. Published drawings include the artwork
+                    preview image and the title you provide. No personal information is attached to published drawings.
+                </p>
+
+                <h2>Data Storage and Security</h2>
+                <p>
+                    Drawing data is stored on our server. Recovery keys are stored in hashed form for security.
+                    We take reasonable measures to protect stored data, but no system is completely secure.
+                    Since MasDraw is anonymous, the risk to personal privacy is minimal.
+                </p>
+
+                <h2>Cookies</h2>
+                <p>
+                    MasDraw uses a single functional cookie (browser token) to identify your most recent drawing session
+                    for convenience. This cookie does not track you across websites and contains no personal information.
+                    You can clear this cookie at any time through your browser settings.
+                </p>
+
+                <h2>Third-Party Services</h2>
+                <p>
+                    MasDraw may use third-party services for hosting, content delivery, and security (such as Cloudflare).
+                    These services may collect their own data according to their own privacy policies.
+                </p>
+
+                <h2>Children's Privacy</h2>
+                <p>
+                    MasDraw does not knowingly collect personal information from children under 13.
+                    Since the platform is anonymous and does not require registration, minimal data is collected from any user.
+                </p>
+
+                <h2>Changes to This Policy</h2>
+                <p>
+                    We may update this Privacy Policy from time to time. Changes will be posted on this page with an
+                    updated revision date. Continued use of MasDraw after changes constitutes acceptance of the updated policy.
+                </p>
+
+                <h2>Contact</h2>
+                <p>
+                    If you have questions about this Privacy Policy, you can reach us through the website at
+                    <a href="{% url 'home' %}">https://masdraw.masbate.top</a>.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="cta-strip">
+                <div>
+                    <h2>Ready to draw?</h2>
+                    <p>MasDraw is free, anonymous, and simple to use.</p>
+                </div>
+                <a class="button button-secondary" href="{% url 'home' %}">Go to Homepage</a>
+            </div>
+        </div>
+    </section>
+{% endblock %}

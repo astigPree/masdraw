@@ -1,0 +1,267 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_title %}{{ project.title|default:"Anonymous Masbate drawing" }} | MasDraw{% endblock %}
+{% block page_description %}View a published anonymous drawing on MasDraw. Explore this Masbate-inspired artwork online, then create your own drawing and publish it when ready.{% endblock %}
+{% block canonical_url %}{{ request.scheme }}://{{ request.get_host }}{% url 'showcase_detail' project.public_id %}{% endblock %}
+{% block body_class %}showcase-detail-page{% endblock %}
+
+{% block og_type %}article{% endblock %}
+{% block og_title %}{{ project.title|default:"Anonymous Masbate drawing" }} | MasDraw{% endblock %}
+{% block og_description %}View a published anonymous drawing on MasDraw. Explore this Masbate-inspired artwork online, then create your own drawing and publish it when ready.{% endblock %}
+{% block og_url %}{{ request.scheme }}://{{ request.get_host }}{% url 'showcase_detail' project.public_id %}{% endblock %}
+{% block og_image %}{% if project.preview_image %}{{ project.preview_image }}{% else %}{{ request.scheme }}://{{ request.get_host }}{% static 'assets/logo.png' %}{% endif %}{% endblock %}
+{% block twitter_title %}{{ project.title|default:"Anonymous Masbate drawing" }} | MasDraw{% endblock %}
+{% block twitter_description %}View a published anonymous drawing on MasDraw. Explore this Masbate-inspired artwork online, then create your own drawing and publish it when ready.{% endblock %}
+{% block twitter_image %}{% if project.preview_image %}{{ project.preview_image }}{% else %}{{ request.scheme }}://{{ request.get_host }}{% static 'assets/logo.png' %}{% endif %}{% endblock %}
+
+{% block structured_data %}
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "VisualArtwork",
+            "name": "{{ project.title|default:'Anonymous Masbate drawing'|escapejs }}",
+            "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'showcase_detail' project.public_id %}",
+            "datePublished": "{{ project.published_at|date:'c' }}",
+            "dateModified": "{{ project.updated_at|date:'c' }}",
+            "creator": {
+                "@type": "Person",
+                "name": "Anonymous creator"
+            },
+            "isAccessibleForFree": true
+        }
+    </script>
+{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/showcase.css' %}">
+{% endblock %}
+
+{% block content %}
+    <section class="detail-section">
+        <div class="container detail-wrap">
+            <a class="back-link" href="{% url 'showcase' %}">Back to Masbate showcase</a>
+            {% if messages %}
+                <div class="flash-messages" role="status" aria-live="polite">
+                    {% for message in messages %}
+                        <p class="flash-message flash-message-{{ message.tags }}">{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <article class="detail-card detail-exhibit fade-up">
+                <div class="detail-heading">
+                    <div class="detail-badges">
+                        <p class="section-kicker">Published Masbate drawing</p>
+                        {% if project.is_featured %}
+                            <span class="content-badge detail-featured-badge">Featured</span>
+                        {% endif %}
+                    </div>
+                    <h1>{{ project.title|default:"Anonymous Masbate drawing" }}</h1>
+                    <p class="detail-date">Published {{ project.published_at|date:"M j, Y" }}</p>
+                    <div class="detail-actions">
+                        <form method="post" action="{% url 'start_drawing' %}">
+                            {% csrf_token %}
+                            <button class="button button-primary" type="submit">Start Your Drawing</button>
+                        </form>
+                        <a class="button button-secondary" href="{% url 'showcase' %}">Explore More</a>
+                        {% if request.user.is_authenticated %}
+                            <button class="heart-button detail-heart-button{% if user_has_hearted %} is-hearted{% endif %}" type="button" data-heart-button data-heart-url="{% url 'toggle_drawing_heart' project.public_id %}" aria-pressed="{% if user_has_hearted %}true{% else %}false{% endif %}">
+                                <span class="heart-icon" data-heart-icon aria-hidden="true">{% if user_has_hearted %}&hearts;{% else %}&#9825;{% endif %}</span>
+                                <span data-heart-count>{{ project.heart_count }}</span>
+                            </button>
+                        {% else %}
+                            <button class="heart-button detail-heart-button" type="button" data-heart-button data-heart-url="{% url 'toggle_drawing_heart' project.public_id %}" data-heart-login-url="{% url 'login' %}?next={{ request.get_full_path|urlencode }}" data-auth-prompt="Create an account to heart drawings and interact with the MasDraw showcase." aria-pressed="false">
+                                <span class="heart-icon" data-heart-icon aria-hidden="true">&#9825;</span>
+                                <span data-heart-count>{{ project.heart_count }}</span>
+                            </button>
+                        {% endif %}
+                        <span class="comment-count-pill detail-comment-count" aria-label="{{ project.comment_count }} comments">
+                            <span>{{ project.comment_count }}</span>
+                            <span>Comments</span>
+                        </span>
+                    </div>
+                    <div class="creator-summary{% if not project.owner %} is-anonymous{% endif %}" aria-label="Creator summary">
+                        <div class="creator-avatar">
+                            {% if owner_profile and owner_profile.profile_image %}
+                                <img src="{{ owner_profile.profile_image }}" alt="{{ project.owner.username }} profile picture">
+                            {% else %}
+                                <span>{% if project.owner %}{{ project.owner.username|slice:":1"|upper }}{% else %}AN{% endif %}</span>
+                            {% endif %}
+                        </div>
+                        <div class="creator-identity">
+                            <span>{% if project.owner %}Creator profile{% else %}Published anonymously{% endif %}</span>
+                            <strong>{% if project.owner %}{{ project.owner.username }}{% else %}Anonymous creator{% endif %}</strong>
+                            <p>
+                                {% if project.owner %}
+                                    Claimed MasDraw account with public sketch activity.
+                                {% else %}
+                                    This sketch has not been claimed by an account yet.
+                                {% endif %}
+                            </p>
+                        </div>
+                        {% if project.owner %}
+                            <dl class="creator-stats">
+                                <div>
+                                    <dt>Claimed sketches</dt>
+                                    <dd>{{ owner_sketch_count }}</dd>
+                                </div>
+                                <div>
+                                    <dt>Total hearts</dt>
+                                    <dd>{{ owner_total_hearts }}</dd>
+                                </div>
+                            </dl>
+                        {% else %}
+                            <div class="creator-anonymous-note">
+                                <span>Unclaimed</span>
+                                <strong>Creator stats appear after this sketch is claimed.</strong>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% if project.preview_image %}
+                    <div class="sketch-viewer-shell" data-sketch-viewer>
+                        <div class="detail-preview has-viewer-controls" data-viewer-frame>
+                            <span class="detail-tape detail-tape-left" aria-hidden="true"></span>
+                            <span class="detail-tape detail-tape-right" aria-hidden="true"></span>
+                            <div class="sketch-viewer-canvas" data-viewer-canvas>
+                                <img data-viewer-image src="{{ project.preview_image }}" alt="{{ project.title|default:'Published Masbate drawing' }}">
+                            </div>
+                        </div>
+                        <div class="sketch-viewer-toolbar" aria-label="Sketch viewer controls">
+                            <button type="button" data-viewer-fullscreen>Full Screen</button>
+                            <button type="button" data-viewer-zoom-out aria-label="Zoom out">-</button>
+                            <span class="sketch-viewer-scale" data-viewer-scale>100%</span>
+                            <button type="button" data-viewer-zoom-in aria-label="Zoom in">+</button>
+                            <button type="button" data-viewer-reset>Reset</button>
+                            <button type="button" data-viewer-download data-download-name="masdraw-{{ project.public_id }}.png">Download Image</button>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="detail-preview">
+                        <span class="detail-tape detail-tape-left" aria-hidden="true"></span>
+                        <span class="detail-tape detail-tape-right" aria-hidden="true"></span>
+                        <div class="empty-preview">No preview available</div>
+                    </div>
+                {% endif %}
+
+                <section class="comments-panel" id="comments">
+                    <div class="comments-heading">
+                        <div>
+                            <p class="section-kicker">Comments</p>
+                            <h2>{{ project.comment_count }} comment{{ project.comment_count|pluralize }}</h2>
+                        </div>
+                    </div>
+
+                    {% if request.user.is_authenticated %}
+                        <form class="comment-form" method="post" action="{% url 'create_drawing_comment' project.public_id %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="comments_page" value="{{ comments_page_obj.number }}">
+                            <label for="comment-body">Add a comment</label>
+                            <textarea id="comment-body" name="body" rows="4" maxlength="500" required placeholder="Share a thoughtful comment."></textarea>
+                            <div class="comment-form-footer">
+                                <span>500 characters max</span>
+                                <button class="button button-primary" type="submit">Post Comment</button>
+                            </div>
+                        </form>
+                    {% else %}
+                        <div class="comment-login-prompt">
+                            <p>Login or create an account to comment on this drawing.</p>
+                            <div class="comment-login-actions">
+                                <a class="button button-primary" href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}" data-auth-modal="login">Login</a>
+                                <a class="button button-secondary" href="{% url 'register' %}" data-auth-modal="register">Create Account</a>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <div class="comment-list">
+                        {% for comment in comments %}
+                            <article class="comment-item{% if comment.is_hidden or comment.is_deleted_by_user %} is-removed{% endif %}">
+                                {% if comment.is_hidden or comment.is_deleted_by_user %}
+                                    <p class="comment-removed">This comment was removed.</p>
+                                {% else %}
+                                    <div class="comment-meta">
+                                        <div class="comment-author-shell">
+                                            <div class="comment-avatar">
+                                                {% if comment.user.masdraw_profile.profile_image %}
+                                                    <img src="{{ comment.user.masdraw_profile.profile_image }}" alt="{{ comment.user.username }} profile picture">
+                                                {% else %}
+                                                    <span>{{ comment.user.username|slice:":1"|upper }}</span>
+                                                {% endif %}
+                                            </div>
+                                            <div class="comment-author">
+                                                <strong>{{ comment.user.username }}</strong>
+                                                <span>{{ comment.commenter_claimed_sketch_count }} claimed sketch{{ comment.commenter_claimed_sketch_count|pluralize:"es" }}</span>
+                                            </div>
+                                        </div>
+                                        <time datetime="{{ comment.created_at|date:'c' }}">{{ comment.created_at|date:"M j, Y g:i A" }}</time>
+                                    </div>
+                                    <p class="comment-body">{{ comment.body|linebreaksbr }}</p>
+                                    {% if request.user.is_authenticated and comment.user_id == request.user.id %}
+                                        <form class="comment-delete-form" method="post" action="{% url 'delete_drawing_comment' comment.id %}">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="comments_page" value="{{ comments_page_obj.number }}">
+                                            <button class="comment-delete-button" type="submit">Delete</button>
+                                        </form>
+                                    {% endif %}
+                                {% endif %}
+                            </article>
+                        {% empty %}
+                            <div class="comments-empty">
+                                <p>No comments yet.</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    {% if comments_page_obj.has_other_pages %}
+                        <nav class="comment-pagination" aria-label="Comments pagination">
+                            <div class="comment-pagination-summary">
+                                Page {{ comments_page_obj.number }} of {{ comments_paginator.num_pages }}
+                            </div>
+                            <div class="comment-pagination-actions">
+                                {% if comments_page_obj.has_previous %}
+                                    <a class="pagination-link" href="?comments_page=1#comments">First</a>
+                                    <a class="pagination-link" href="?comments_page={{ comments_page_obj.previous_page_number }}#comments">Previous</a>
+                                {% else %}
+                                    <span class="pagination-link is-disabled">First</span>
+                                    <span class="pagination-link is-disabled">Previous</span>
+                                {% endif %}
+
+                                {% if comments_page_obj.has_next %}
+                                    <a class="pagination-link" href="?comments_page={{ comments_page_obj.next_page_number }}#comments">Next</a>
+                                    <a class="pagination-link" href="?comments_page={{ comments_paginator.num_pages }}#comments">Last</a>
+                                {% else %}
+                                    <span class="pagination-link is-disabled">Next</span>
+                                    <span class="pagination-link is-disabled">Last</span>
+                                {% endif %}
+                            </div>
+                        </nav>
+                    {% endif %}
+                </section>
+
+                <section class="detail-draw-panel">
+                    <div>
+                        <p class="section-kicker">Your turn</p>
+                        <h2>Make something only you would draw.</h2>
+                        <p>Start with a line, a color, a place, or a memory. Keep it private until it feels ready.</p>
+                    </div>
+                    <div class="detail-prompt-grid" aria-label="Drawing ideas">
+                        <span>Island color</span>
+                        <span>Rodeo energy</span>
+                        <span>Home memory</span>
+                        <span>Festival mood</span>
+                    </div>
+                    <form method="post" action="{% url 'start_drawing' %}">
+                        {% csrf_token %}
+                        <button class="button button-primary" type="submit">Open Blank Canvas</button>
+                    </form>
+                </section>
+            </article>
+        </div>
+    </section>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/showcase.js' %}"></script>
+{% endblock %}

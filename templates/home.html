@@ -1,0 +1,390 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_title %}MasDraw | Anonymous Drawing in Masbate Online{% endblock %}
+{% block page_description %}MasDraw is a free anonymous online drawing platform for Masbate. Create digital drawings without signup, save privately, and share selected artwork in the public showcase.{% endblock %}
+{% block canonical_url %}{{ request.scheme }}://{{ request.get_host }}{% url 'home' %}{% endblock %}
+{% block og_title %}MasDraw | Anonymous Drawing in Masbate Online{% endblock %}
+{% block og_description %}MasDraw is a free anonymous online drawing platform for Masbate. Create digital drawings without signup, save privately, and share selected artwork in the public showcase.{% endblock %}
+{% block og_url %}{{ request.scheme }}://{{ request.get_host }}{% url 'home' %}{% endblock %}
+{% block twitter_title %}MasDraw | Anonymous Drawing in Masbate Online{% endblock %}
+{% block twitter_description %}MasDraw is a free anonymous online drawing platform for Masbate. Create digital drawings without signup, save privately, and share selected artwork in the public showcase.{% endblock %}
+{% block body_class %}home-page{% endblock %}
+
+{% block structured_data %}
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "MasDraw",
+            "alternateName": "Mas Draw",
+            "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'home' %}",
+            "description": "Anonymous drawing website for Masbate-inspired art and online sketch sharing."
+        }
+    </script>
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+                {
+                    "@type": "Question",
+                    "name": "What is MasDraw?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "MasDraw is an anonymous drawing website where users can create Masbate-inspired drawings online, save privately with a recovery key, and publish selected work to a public showcase."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "Can I create an anonymous drawing without signing up?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Yes. MasDraw lets you start drawing immediately without login or email, then recover your unfinished work later using a private recovery key."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "Can I share a Masbate drawing publicly on MasDraw?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Yes. After saving your drawing, you can publish it to the MasDraw showcase so other visitors can view your Masbate-inspired artwork online."
+                    }
+                }
+            ]
+        }
+    </script>
+{% endblock %}
+
+{% block content %}
+    <section class="hero-section">
+        <div class="container hero-grid">
+            <div class="hero-copy-block fade-up">
+                <p class="section-kicker">Masbate-inspired drawing platform</p>
+                <h1 class="hero-title">Draw Masbate Stories. Save Privately. Share Creatively.</h1>
+                <p class="hero-text">
+                    MasDraw is an anonymous drawing website for anyone who wants to draw Masbate online.
+                    Sketch rodeo energy, island color, and local imagination instantly, then save privately with a recovery key and publish when ready.
+                </p>
+
+                {% if messages %}
+                    <div class="flash-messages" role="status" aria-live="polite">
+                        {% for message in messages %}
+                            <p class="flash-message flash-message-{{ message.tags }}">{{ message }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <div class="hero-actions">
+                    <form method="post" action="{% url 'start_drawing' %}">
+                        {% csrf_token %}
+                        <button class="button button-primary" type="submit">Start Drawing</button>
+                    </form>
+                    <a class="button button-secondary" href="{% url 'recover_drawing' %}">Recover Drawing</a>
+                    <a class="button button-secondary" href="{% url 'showcase' %}">View Showcase</a>
+                </div>
+
+                {% if recent_project %}
+                    <div class="continue-card">
+                        <span>Recent drawing found on this browser.</span>
+                        <a href="{% url 'drawing_detail' recent_project.public_id %}">Continue Drawing</a>
+                    </div>
+                {% endif %}
+            </div>
+
+            <aside class="hero-proof fade-up" aria-label="masdraw product summary">
+                <img class="hero-proof-logo" src="{% static 'assets/logo.png' %}" alt="">
+                <h2>One canvas for island color, rodeo spirit, and local art.</h2>
+                <ul class="proof-list">
+                    <li><span class="proof-dot blue"></span>Inspired by Masbate seas and skies</li>
+                    <li><span class="proof-dot green"></span>Grounded in ranch and rodeo culture</li>
+                    <li><span class="proof-dot pink"></span>Open for Obra-style creative expression</li>
+                </ul>
+            </aside>
+        </div>
+    </section>
+
+    {% if featured_projects %}
+        <section class="section featured-home-section">
+            <div class="container">
+                <div class="section-heading split-heading">
+                    <div>
+                        <p class="section-kicker">Featured Sketches</p>
+                        <h2>Selected Masbate sketches from anonymous creators.</h2>
+                        <p>Curated public drawings that show the strongest island, rodeo, and local art energy.</p>
+                    </div>
+                    <a class="button button-secondary" href="{% url 'showcase' %}">View Showcase</a>
+                </div>
+
+                <div class="showcase-preview-grid">
+                    {% for project in featured_projects %}
+                        <a class="showcase-preview-card card" href="{% url 'showcase_detail' project.public_id %}">
+                            <div class="showcase-preview-image">
+                                {% if project.preview_image %}
+                                    <img src="{{ project.preview_image }}" alt="{{ project.title|default:'Featured Masbate sketch' }}">
+                                {% else %}
+                                    <div class="showcase-preview-empty">No preview</div>
+                                {% endif %}
+                                <span class="content-badge">Featured</span>
+                            </div>
+                            <strong>{{ project.title|default:"Untitled" }}</strong>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    {% endif %}
+
+    <section class="section">
+        <div class="container">
+            <div class="section-heading">
+                <p class="section-kicker">Anonymous drawing for Masbate</p>
+                <h2>MasDraw, also searched as Mas Draw, is built for fast online sketching.</h2>
+                <p>
+                    If people search for anonymous drawing, Masbate drawing, Drawing Masbate Online, or MasDraw,
+                    this is the core use case: open the canvas fast, draw without signup, and keep control over what gets published.
+                </p>
+                <p><a href="{% url 'anonymous_drawing_masbate_online' %}">Read more about anonymous drawing in Masbate online.</a></p>
+            </div>
+
+            <div class="feature-grid">
+                <article class="card feature-card">
+                    <div class="feature-icon">A</div>
+                    <h3>Anonymous Drawing</h3>
+                    <p>Create artwork without an account, inbox, or public profile.</p>
+                </article>
+                <article class="card feature-card">
+                    <div class="feature-icon">M</div>
+                    <h3>Masbate Drawing Online</h3>
+                    <p>Use the browser-based canvas to create Masbate-themed sketches from any device.</p>
+                </article>
+                <article class="card feature-card">
+                    <div class="feature-icon">D</div>
+                    <h3>MasDraw Showcase</h3>
+                    <p>Publish selected pieces to a public gallery while keeping unfinished work private.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="section-heading">
+                <p class="section-kicker">Masbate creative flow</p>
+                <h2>Built for quick sketches, local stories, and public art sharing.</h2>
+                <p>
+                    masdraw keeps the experience simple: draw anonymously, keep your recovery key,
+                    and share Masbate-inspired work only when you choose.
+                </p>
+            </div>
+
+            <div class="feature-grid">
+                <article class="card feature-card">
+                    <div class="feature-icon">01</div>
+                    <h3>No Login Needed</h3>
+                    <p>Open the canvas immediately and start shaping an island, rodeo, or community idea.</p>
+                </article>
+                <article class="card feature-card">
+                    <div class="feature-icon">02</div>
+                    <h3>Secret Pass-Key Recovery</h3>
+                    <p>Each drawing gets a private key so unfinished artwork can be continued later.</p>
+                </article>
+                <article class="card feature-card">
+                    <div class="feature-icon">03</div>
+                    <h3>Masbate Showcase</h3>
+                    <p>Publish only the pieces you want shown in the public gallery.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="section-heading">
+                <p class="section-kicker">Masbate inspiration</p>
+                <h2>From rodeo heritage to Obra-style local creativity.</h2>
+                <p>
+                    The theme takes cues from Masbate's cattle country identity, island landscape,
+                    festival energy, and growing arts scene across visual, music, fashion, film,
+                    food, dance, and photography.
+                </p>
+            </div>
+
+            <div class="feature-grid">
+                <article class="card feature-card">
+                    <div class="feature-icon">M</div>
+                    <h3>Rodeo Capital Energy</h3>
+                    <p>Strong lines, motion, and confident navy accents reflect Masbate's ranch and rodeo culture.</p>
+                </article>
+                <article class="card feature-card">
+                    <div class="feature-icon">A</div>
+                    <h3>Island Color</h3>
+                    <p>Sea blue, pasture green, rodeo gold, and coral accents keep the UI bright but controlled.</p>
+                </article>
+                <article class="card feature-card">
+                    <div class="feature-icon">S</div>
+                    <h3>Local Art Showcase</h3>
+                    <p>The gallery frames anonymous sketches as creative stories inspired by Masbate.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="section-heading">
+                <p class="section-kicker">How it works</p>
+                <h2>From quick Masbate sketch to shared artwork in four steps.</h2>
+            </div>
+
+            <div class="steps-grid">
+                <article class="card step-card">
+                    <div class="step-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <path d="M4 19L14.5 8.5L18 12L7.5 22H4V19Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                            <path d="M13 10L16 7L19.5 10.5L16.5 13.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M18 3L21 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <h3>Start drawing</h3>
+                    <p>Open a blank canvas for island scenes, rodeo motion, or local symbols.</p>
+                </article>
+                <article class="card step-card">
+                    <div class="step-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <path d="M7 11V8C7 5.24 9.24 3 12 3C14.76 3 17 5.24 17 8V11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M6 11H18C19.1 11 20 11.9 20 13V19C20 20.1 19.1 21 18 21H6C4.9 21 4 20.1 4 19V13C4 11.9 4.9 11 6 11Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                            <path d="M12 15V17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <h3>Save your pass-key</h3>
+                    <p>Keep the key private so your anonymous artwork can be reopened later.</p>
+                </article>
+                <article class="card step-card">
+                    <div class="step-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <path d="M4 12C4 7.58 7.58 4 12 4C15.1 4 17.78 5.76 19.11 8.34" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M20 4V9H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M20 12C20 16.42 16.42 20 12 20C8.9 20 6.22 18.24 4.89 15.66" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M4 20V15H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3>Continue anytime</h3>
+                    <p>Return to refine colors, lines, and details when inspiration comes back.</p>
+                </article>
+                <article class="card step-card">
+                    <div class="step-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <path d="M12 3V15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M7 8L12 3L17 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M5 14V19C5 20.1 5.9 21 7 21H17C18.1 21 19 20.1 19 19V14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3>Publish to showcase</h3>
+                    <p>Share the finished piece with the public Masbate-inspired gallery.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="section-heading">
+                <p class="section-kicker">MasDraw FAQ</p>
+                <h2>Common questions about anonymous online drawing in Masbate.</h2>
+            </div>
+
+            <div class="feature-grid">
+                <article class="card feature-card">
+                    <h3>What is MasDraw?</h3>
+                    <p>MasDraw is a web-based anonymous drawing platform focused on Masbate-inspired art, quick sketching, and optional public sharing.</p>
+                </article>
+                <article class="card feature-card">
+                    <h3>Do I need an account?</h3>
+                    <p>No. Start drawing immediately, save your recovery key, and come back later without registration.</p>
+                </article>
+                <article class="card feature-card">
+                    <h3>Can I publish my drawing?</h3>
+                    <p>Yes. Save first, then publish your finished Masbate drawing to the public showcase when it is ready.</p>
+                </article>
+            </div>
+            <p style="margin-top: 1.5rem;"><a href="{% url 'faq' %}">View all frequently asked questions</a></p>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="section-heading">
+                <p class="section-kicker">Learn more</p>
+                <h2>What is MasDraw?</h2>
+            </div>
+            <p>
+                MasDraw is a free anonymous online drawing platform for people in Masbate.
+                It allows users to create simple digital drawings without creating an account,
+                save their work privately using a recovery key, and optionally share selected
+                drawings in a public showcase.
+            </p>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="section-heading">
+                <p class="section-kicker">Anonymous creativity</p>
+                <h2>Anonymous Drawing in Masbate Online</h2>
+            </div>
+            <p>
+                MasDraw is designed for students, artists, hobbyists, and local creators who want
+                a simple way to make Masbate-inspired sketches online. The platform focuses on quick
+                creative expression, privacy, and easy sharing.
+            </p>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="section-heading">
+                <p class="section-kicker">Simple flow</p>
+                <h2>How MasDraw Works</h2>
+            </div>
+            <p>
+                Users can start drawing, save their artwork, keep a private recovery key, and publish
+                their drawing only when they want to share it publicly. No account is required to start creating.
+            </p>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="section-heading">
+                <p class="section-kicker">Benefits</p>
+                <h2>Why Use MasDraw?</h2>
+            </div>
+            <p>
+                MasDraw is simple, anonymous, and locally inspired. It is useful for quick sketches,
+                creative ideas, local stories, and digital artwork connected to Masbate culture and everyday life.
+            </p>
+            <p style="margin-top: 1rem;">
+                <a href="{% url 'about' %}">Learn more about MasDraw</a> &middot;
+                <a href="{% url 'faq' %}">Read the FAQ</a> &middot;
+                <a href="{% url 'privacy_policy' %}">Privacy Policy</a> &middot;
+                <a href="{% url 'terms' %}">Terms of Use</a>
+            </p>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="cta-strip">
+                <div>
+                    <h2>Ready when the Masbate idea hits.</h2>
+                    <p>No signup, no setup, no dashboard maze. Just open the canvas and draw.</p>
+                </div>
+                <form method="post" action="{% url 'start_drawing' %}">
+                    {% csrf_token %}
+                    <button class="button button-secondary" type="submit">Start Drawing</button>
+                </form>
+            </div>
+        </div>
+    </section>
+{% endblock %}

@@ -1,3 +1,7 @@
+## Repository Notice
+
+This project was originally developed and maintained in another GitHub account. It has been mirrored here as part of my professional portfolio to showcase my work and development experience.
+
 # MasDraw
 
 Anonymous online drawing platform for Masbate-inspired digital sketches, private recovery, and public artwork sharing.
@@ -175,7 +179,7 @@ masdraw/
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/masdraw.git
+git clone https://github.com/astigPree/masdraw.git
 cd masdraw
 ```
 
@@ -308,8 +312,8 @@ Building MasDraw strengthened my experience with Django application architecture
 
 ## Author
 
-**Your Name**  
-GitHub: https://github.com/yourusername  
-Portfolio: https://yourportfolio.com  
-Email: your-email@example.com
+**Ericson Mark Abayon Guanzon**  
+GitHub: https://github.com/astigPree  
+Portfolio: https://programmerin.masbate.top  
+Email: maxcrizguanzon@gmail.com
 "# masdraw" 

@@ -1,0 +1,208 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_title %}Anonymous Drawing in Masbate Online | MasDraw{% endblock %}
+{% block page_description %}Create anonymous digital drawings online with MasDraw, a simple drawing platform made for Masbate-inspired sketches, stories, and local creativity.{% endblock %}
+{% block canonical_url %}{{ request.scheme }}://{{ request.get_host }}{% url 'anonymous_drawing_masbate_online' %}{% endblock %}
+{% block og_title %}Anonymous Drawing in Masbate Online | MasDraw{% endblock %}
+{% block og_description %}Create anonymous digital drawings online with MasDraw, a simple drawing platform made for Masbate-inspired sketches, stories, and local creativity.{% endblock %}
+{% block og_url %}{{ request.scheme }}://{{ request.get_host }}{% url 'anonymous_drawing_masbate_online' %}{% endblock %}
+{% block twitter_title %}Anonymous Drawing in Masbate Online | MasDraw{% endblock %}
+{% block twitter_description %}Create anonymous digital drawings online with MasDraw, a simple drawing platform made for Masbate-inspired sketches, stories, and local creativity.{% endblock %}
+{% block body_class %}seo-landing-page{% endblock %}
+
+{% block structured_data %}
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            "name": "Anonymous Drawing in Masbate Online",
+            "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'anonymous_drawing_masbate_online' %}",
+            "description": "Landing page for anonymous drawing in Masbate online with MasDraw."
+        }
+    </script>
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+                {
+                    "@type": "Question",
+                    "name": "How do I start an anonymous drawing in Masbate online?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Open MasDraw, start drawing in the browser, save your recovery key, and publish only if you want your work to appear publicly."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "Does MasDraw require signup?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "No. MasDraw supports anonymous online drawing without registration, email, or a public profile."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "Can I publish Masbate-inspired artwork on MasDraw?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Yes. You can publish completed Masbate-inspired drawings to the public showcase after saving the artwork and adding a title."
+                    }
+                }
+            ]
+        }
+    </script>
+{% endblock %}
+
+{% block content %}
+    <section class="hero-section">
+        <div class="container hero-grid">
+            <div class="hero-copy-block fade-up">
+                <p class="section-kicker">SEO landing page</p>
+                <h1 class="hero-title">Anonymous Drawing in Masbate Online</h1>
+                <p class="hero-text">
+                    MasDraw is built for anonymous drawing in Masbate online. Open the canvas instantly,
+                    sketch without signup, save privately with a recovery key, and publish finished
+                    Masbate-inspired artwork when you are ready.
+                </p>
+                <div class="hero-actions">
+                    <form method="post" action="{% url 'start_drawing' %}">
+                        {% csrf_token %}
+                        <button class="button button-primary" type="submit">Start Anonymous Drawing</button>
+                    </form>
+                    <a class="button button-secondary" href="{% url 'showcase' %}">Browse MasDraw Showcase</a>
+                </div>
+            </div>
+
+            <aside class="hero-proof fade-up" aria-label="Anonymous drawing summary">
+                <img class="hero-proof-logo" src="{% static 'assets/logo.png' %}" alt="">
+                <h2>Built for simple creation, private saving, and public sharing.</h2>
+                <ul class="proof-list">
+                    <li><span class="proof-dot blue"></span>Anonymous drawing without login</li>
+                    <li><span class="proof-dot green"></span>Masbate-inspired online sketching</li>
+                    <li><span class="proof-dot pink"></span>Public showcase for finished artwork</li>
+                </ul>
+            </aside>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="section-heading">
+                <p class="section-kicker">Why this page exists</p>
+                <h2>MasDraw matches the exact search intent behind anonymous online drawing in Masbate.</h2>
+                <p>
+                    People looking for anonymous drawing, Mas Draw, MasDraw, Masbate drawing, or drawing in Masbate online
+                    need a simple tool that works in the browser. MasDraw solves that directly: fast start, private draft recovery,
+                    and optional publishing for public discovery.
+                </p>
+            </div>
+
+            <div class="feature-grid">
+                <article class="card feature-card">
+                    <div class="feature-icon">01</div>
+                    <h3>Anonymous by default</h3>
+                    <p>No account creation, no email collection, and no forced public identity before drawing.</p>
+                </article>
+                <article class="card feature-card">
+                    <div class="feature-icon">02</div>
+                    <h3>Made for Masbate-related art</h3>
+                    <p>Create island scenes, rodeo-inspired sketches, festival visuals, and local creative concepts online.</p>
+                </article>
+                <article class="card feature-card">
+                    <div class="feature-icon">03</div>
+                    <h3>Publish when the work is ready</h3>
+                    <p>Keep drafts private, then add a title and publish finished work to the MasDraw showcase.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="section-heading">
+                <p class="section-kicker">How it works</p>
+                <h2>From blank canvas to published Masbate drawing.</h2>
+            </div>
+
+            <div class="steps-grid">
+                <article class="card step-card">
+                    <div class="step-icon">1</div>
+                    <h3>Open the canvas</h3>
+                    <p>Start a browser-based drawing session from any device with no signup required.</p>
+                </article>
+                <article class="card step-card">
+                    <div class="step-icon">2</div>
+                    <h3>Save your recovery key</h3>
+                    <p>Use the private key to reopen unfinished artwork later from another browser or device.</p>
+                </article>
+                <article class="card step-card">
+                    <div class="step-icon">3</div>
+                    <h3>Add a real title</h3>
+                    <p>Each published artwork needs a title so the drawing page can rank and make sense to visitors.</p>
+                </article>
+                <article class="card step-card">
+                    <div class="step-icon">4</div>
+                    <h3>Publish to the showcase</h3>
+                    <p>Share completed drawings publicly on MasDraw for discovery through search and gallery browsing.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    {% if featured_projects %}
+        <section class="section featured-home-section">
+            <div class="container">
+                <div class="section-heading split-heading">
+                    <div>
+                        <p class="section-kicker">Featured drawings</p>
+                        <h2>Published Masbate-inspired sketches on MasDraw.</h2>
+                        <p>Examples of artwork already discoverable through the public showcase.</p>
+                    </div>
+                    <a class="button button-secondary" href="{% url 'showcase' %}">Open Showcase</a>
+                </div>
+
+                <div class="showcase-preview-grid">
+                    {% for project in featured_projects %}
+                        <a class="showcase-preview-card card" href="{% url 'showcase_detail' project.public_id %}">
+                            <div class="showcase-preview-image">
+                                {% if project.preview_image %}
+                                    <img src="{{ project.preview_image }}" alt="{{ project.title|default:'Featured Masbate drawing' }}">
+                                {% else %}
+                                    <div class="showcase-preview-empty">No preview</div>
+                                {% endif %}
+                                <span class="content-badge">Featured</span>
+                            </div>
+                            <strong>{{ project.title|default:"Untitled" }}</strong>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    {% endif %}
+
+    <section class="section">
+        <div class="container">
+            <div class="section-heading">
+                <p class="section-kicker">Related pages</p>
+                <h2>Internal links that help users and search engines navigate MasDraw.</h2>
+            </div>
+
+            <div class="feature-grid">
+                <article class="card feature-card">
+                    <h3><a href="{% url 'home' %}">MasDraw home</a></h3>
+                    <p>Overview of the product, featured sketches, and primary calls to action.</p>
+                </article>
+                <article class="card feature-card">
+                    <h3><a href="{% url 'showcase' %}">Masbate drawings showcase</a></h3>
+                    <p>Public gallery of anonymous drawings and published Masbate-inspired artwork.</p>
+                </article>
+                <article class="card feature-card">
+                    <h3><a href="{% url 'recover_drawing' %}">Recover drawing</a></h3>
+                    <p>Return to a private draft using the recovery key saved when the drawing was created.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+{% endblock %}

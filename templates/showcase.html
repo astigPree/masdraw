@@ -1,0 +1,313 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_title %}MasDraw Showcase | Public Drawings from Masbate Creators{% endblock %}
+{% block page_description %}Explore public drawings created on MasDraw. View Masbate-inspired sketches, anonymous artworks, and creative digital stories shared by local users.{% endblock %}
+{% block canonical_url %}{{ request.scheme }}://{{ request.get_host }}{% url 'showcase' %}{% if page_obj.number > 1 %}?page={{ page_obj.number }}{% endif %}{% endblock %}
+{% block og_title %}MasDraw Showcase | Public Drawings from Masbate Creators{% endblock %}
+{% block og_description %}Explore public drawings created on MasDraw. View Masbate-inspired sketches, anonymous artworks, and creative digital stories shared by local users.{% endblock %}
+{% block og_url %}{{ request.scheme }}://{{ request.get_host }}{% url 'showcase' %}{% if page_obj.number > 1 %}?page={{ page_obj.number }}{% endif %}{% endblock %}
+{% block twitter_title %}MasDraw Showcase | Public Drawings from Masbate Creators{% endblock %}
+{% block twitter_description %}Explore public drawings created on MasDraw. View Masbate-inspired sketches, anonymous artworks, and creative digital stories shared by local users.{% endblock %}
+{% block body_class %}showcase-page{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/showcase.css' %}">
+{% endblock %}
+
+{% block structured_data %}
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "CollectionPage",
+            "name": "MasDraw Showcase",
+            "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'showcase' %}{% if page_obj.number > 1 %}?page={{ page_obj.number }}{% endif %}",
+            "description": "Public Masbate-inspired drawings and anonymous online sketches published on MasDraw."
+        }
+    </script>
+{% endblock %}
+
+{% block content %}
+    <section class="gallery-section">
+        <div class="container">
+            <div class="gallery-header fade-up">
+                <p class="section-kicker">Masbate public showcase</p>
+                <h1>Island sketches, rodeo lines, and local creative stories.</h1>
+                <p>Browse anonymous drawings published on MasDraw, including Masbate-inspired sketches, featured artwork, and fresh online creations.</p>
+            </div>
+
+            {% if featured_projects %}
+                {% for project in featured_projects %}
+                    {% if forloop.first %}
+                        <section class="showcase-stage fade-up"
+                            data-gallery-card
+                            data-title="{{ project.title|default:'Untitled' }}"
+                            data-date="Published {{ project.published_at|timesince }} ago{% if project.updated_at and project.published_at and project.updated_at > project.published_at %} &middot; Updated {{ project.updated_at|timesince }} ago{% endif %}"
+                            data-image="{{ project.preview_image }}"
+                            data-detail-url="{% url 'showcase_detail' project.public_id %}">
+                            <div class="stage-copy">
+                                <p class="section-kicker">Viewer spotlight</p>
+                                <h2>{{ project.title|default:"Untitled Masbate drawing" }}</h2>
+                                <p>
+                                    Published {{ project.published_at|timesince }} ago
+                                    {% if project.updated_at and project.published_at and project.updated_at > project.published_at %}
+                                        &middot; Updated {{ project.updated_at|timesince }} ago
+                                    {% endif %}
+                                </p>
+                                <div class="stage-actions">
+                                    <a class="button button-primary" href="{% url 'showcase_detail' project.public_id %}">Open Sketch</a>
+                                    <button class="button button-secondary" type="button" data-quick-view>Quick View</button>
+                                    {% if request.user.is_authenticated %}
+                                        <button class="heart-button{% if project.id in hearted_drawing_ids %} is-hearted{% endif %}" type="button" data-heart-button data-heart-url="{% url 'toggle_drawing_heart' project.public_id %}" aria-pressed="{% if project.id in hearted_drawing_ids %}true{% else %}false{% endif %}">
+                                            <span class="heart-icon" data-heart-icon aria-hidden="true">{% if project.id in hearted_drawing_ids %}&hearts;{% else %}&#9825;{% endif %}</span>
+                                            <span data-heart-count>{{ project.heart_count }}</span>
+                                        </button>
+                                    {% else %}
+                                        <button class="heart-button" type="button" data-heart-button data-heart-url="{% url 'toggle_drawing_heart' project.public_id %}" data-heart-login-url="{% url 'login' %}?next={{ request.get_full_path|urlencode }}" data-auth-prompt="Create an account to heart drawings and interact with the MasDraw showcase." aria-pressed="false">
+                                            <span class="heart-icon" data-heart-icon aria-hidden="true">&#9825;</span>
+                                            <span data-heart-count>{{ project.heart_count }}</span>
+                                        </button>
+                                    {% endif %}
+                                    <span class="comment-count-pill" aria-label="{{ project.comment_count }} comments">
+                                        <span>{{ project.comment_count }}</span>
+                                        <span>Comments</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <a class="stage-canvas" href="{% url 'showcase_detail' project.public_id %}" aria-label="Open {{ project.title|default:'featured drawing' }}">
+                                <span class="stage-pin stage-pin-left" aria-hidden="true"></span>
+                                <span class="stage-pin stage-pin-right" aria-hidden="true"></span>
+                                {% if project.preview_image %}
+                                    <img src="{{ project.preview_image }}" alt="{{ project.title|default:'Featured Masbate drawing' }}" loading="eager">
+                                {% else %}
+                                    <div class="empty-preview">No preview</div>
+                                {% endif %}
+                            </a>
+                        </section>
+                    {% endif %}
+                {% endfor %}
+
+                <section class="showcase-block featured-showcase-block">
+                    <div class="showcase-block-heading">
+                        <div>
+                            <p class="section-kicker">Featured Sketches</p>
+                            <h2>Curated works on the wall.</h2>
+                        </div>
+                    </div>
+
+                    <div class="gallery-grid featured-grid">
+                        {% for project in featured_projects %}
+                            <a class="gallery-card card is-featured" href="{% url 'showcase_detail' project.public_id %}"
+                                data-gallery-card
+                                data-title="{{ project.title|default:'Untitled' }}"
+                                data-date="Published {{ project.published_at|timesince }} ago{% if project.updated_at and project.published_at and project.updated_at > project.published_at %} &middot; Updated {{ project.updated_at|timesince }} ago{% endif %}"
+                                data-image="{{ project.preview_image }}"
+                                data-detail-url="{% url 'showcase_detail' project.public_id %}">
+                                <div class="gallery-preview">
+                                    <span class="gallery-tape" aria-hidden="true"></span>
+                                    {% if project.preview_image %}
+                                        <img src="{{ project.preview_image }}" alt="{{ project.title|default:'Featured Masbate drawing' }}" loading="lazy">
+                                    {% else %}
+                                        <div class="empty-preview">No preview</div>
+                                    {% endif %}
+                                    <span class="content-badge">Featured</span>
+                                    <button class="quick-view-button" type="button" data-quick-view>Quick View</button>
+                                </div>
+                                <div class="gallery-meta">
+                                    <div class="gallery-card-copy">
+                                        <span class="gallery-eyebrow">Featured artwork</span>
+                                        <strong>{{ project.title|default:"Untitled Masbate sketch" }}</strong>
+                                    </div>
+                                    <div class="gallery-card-footer">
+                                        <span class="gallery-date">{{ project.published_at|date:"M j, Y" }}</span>
+                                        {% if request.user.is_authenticated %}
+                                            <button class="heart-button{% if project.id in hearted_drawing_ids %} is-hearted{% endif %}" type="button" data-heart-button data-heart-url="{% url 'toggle_drawing_heart' project.public_id %}" aria-pressed="{% if project.id in hearted_drawing_ids %}true{% else %}false{% endif %}">
+                                                <span class="heart-icon" data-heart-icon aria-hidden="true">{% if project.id in hearted_drawing_ids %}&hearts;{% else %}&#9825;{% endif %}</span>
+                                                <span data-heart-count>{{ project.heart_count }}</span>
+                                            </button>
+                                        {% else %}
+                                            <button class="heart-button" type="button" data-heart-button data-heart-url="{% url 'toggle_drawing_heart' project.public_id %}" data-heart-login-url="{% url 'login' %}?next={{ request.get_full_path|urlencode }}" data-auth-prompt="Create an account to heart drawings and interact with the MasDraw showcase." aria-pressed="false">
+                                                <span class="heart-icon" data-heart-icon aria-hidden="true">&#9825;</span>
+                                                <span data-heart-count>{{ project.heart_count }}</span>
+                                            </button>
+                                        {% endif %}
+                                        <span class="comment-count-pill" aria-label="{{ project.comment_count }} comments">
+                                            <span>{{ project.comment_count }}</span>
+                                            <span>Comments</span>
+                                        </span>
+                                        <span class="view-link">Open</span>
+                                    </div>
+                                </div>
+                            </a>
+                        {% endfor %}
+                    </div>
+                </section>
+            {% endif %}
+
+            {% if top_hearted_projects %}
+                <section class="showcase-block top-hearted-showcase-block">
+                    <div class="showcase-block-heading">
+                        <div>
+                            <p class="section-kicker">Most Hearted Sketches</p>
+                            <h2>Top 5 sketches getting the most love.</h2>
+                        </div>
+                    </div>
+
+                    <div class="top-hearted-grid">
+                        {% for project in top_hearted_projects %}
+                            <a class="top-hearted-card card" href="{% url 'showcase_detail' project.public_id %}"
+                                data-gallery-card
+                                data-title="{{ project.title|default:'Untitled' }}"
+                                data-date="Published {{ project.published_at|timesince }} ago{% if project.updated_at and project.published_at and project.updated_at > project.published_at %} &middot; Updated {{ project.updated_at|timesince }} ago{% endif %}"
+                                data-image="{{ project.preview_image }}"
+                                data-detail-url="{% url 'showcase_detail' project.public_id %}">
+                                <div class="top-hearted-rank" aria-label="Rank {{ forloop.counter }}">#{{ forloop.counter }}</div>
+                                <div class="top-hearted-preview">
+                                    {% if project.preview_image %}
+                                        <img src="{{ project.preview_image }}" alt="{{ project.title|default:'Most hearted MasDraw sketch' }}" loading="lazy">
+                                    {% else %}
+                                        <div class="empty-preview">No preview</div>
+                                    {% endif %}
+                                </div>
+                                <div class="top-hearted-copy">
+                                    <span class="gallery-eyebrow">Most hearted</span>
+                                    <strong>{{ project.title|default:"Untitled MasDraw sketch" }}</strong>
+                                    <div class="top-hearted-meta">
+                                        {% if request.user.is_authenticated %}
+                                            <button class="heart-button{% if project.id in hearted_drawing_ids %} is-hearted{% endif %}" type="button" data-heart-button data-heart-url="{% url 'toggle_drawing_heart' project.public_id %}" aria-pressed="{% if project.id in hearted_drawing_ids %}true{% else %}false{% endif %}">
+                                                <span class="heart-icon" data-heart-icon aria-hidden="true">{% if project.id in hearted_drawing_ids %}&hearts;{% else %}&#9825;{% endif %}</span>
+                                                <span data-heart-count>{{ project.heart_count }}</span>
+                                            </button>
+                                        {% else %}
+                                            <button class="heart-button" type="button" data-heart-button data-heart-url="{% url 'toggle_drawing_heart' project.public_id %}" data-heart-login-url="{% url 'login' %}?next={{ request.get_full_path|urlencode }}" data-auth-prompt="Create an account to heart drawings and interact with the MasDraw showcase." aria-pressed="false">
+                                                <span class="heart-icon" data-heart-icon aria-hidden="true">&#9825;</span>
+                                                <span data-heart-count>{{ project.heart_count }}</span>
+                                            </button>
+                                        {% endif %}
+                                        <span class="comment-count-pill" aria-label="{{ project.comment_count }} comments">
+                                            <span>{{ project.comment_count }}</span>
+                                            <span>Comments</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </a>
+                        {% endfor %}
+                    </div>
+                </section>
+            {% endif %}
+
+            {% if latest_projects %}
+                <section class="showcase-block">
+                    <div class="showcase-block-heading">
+                        <div>
+                            <p class="section-kicker">Latest Sketches</p>
+                            <h2>Fresh public drawings from anonymous creators.</h2>
+                        </div>
+                    </div>
+
+                    <div class="gallery-grid">
+                    {% for project in latest_projects %}
+                        <a class="gallery-card card" href="{% url 'showcase_detail' project.public_id %}"
+                            data-gallery-card
+                            data-title="{{ project.title|default:'Untitled' }}"
+                            data-date="Published {{ project.published_at|timesince }} ago{% if project.updated_at and project.published_at and project.updated_at > project.published_at %} &middot; Updated {{ project.updated_at|timesince }} ago{% endif %}"
+                            data-image="{{ project.preview_image }}"
+                            data-detail-url="{% url 'showcase_detail' project.public_id %}">
+                            <div class="gallery-preview">
+                                <span class="gallery-tape" aria-hidden="true"></span>
+                                {% if project.preview_image %}
+                                    <img src="{{ project.preview_image }}" alt="{{ project.title|default:'Published Masbate drawing' }}" loading="lazy">
+                                {% else %}
+                                    <div class="empty-preview">No preview</div>
+                                {% endif %}
+                                <button class="quick-view-button" type="button" data-quick-view>Quick View</button>
+                            </div>
+                            <div class="gallery-meta">
+                                <div class="gallery-card-copy">
+                                    <span class="gallery-eyebrow">Public artwork</span>
+                                    <strong>{{ project.title|default:"Untitled Masbate sketch" }}</strong>
+                                </div>
+                                <div class="gallery-card-footer">
+                                    <span class="gallery-date">{{ project.published_at|date:"M j, Y" }}</span>
+                                    {% if request.user.is_authenticated %}
+                                        <button class="heart-button{% if project.id in hearted_drawing_ids %} is-hearted{% endif %}" type="button" data-heart-button data-heart-url="{% url 'toggle_drawing_heart' project.public_id %}" aria-pressed="{% if project.id in hearted_drawing_ids %}true{% else %}false{% endif %}">
+                                            <span class="heart-icon" data-heart-icon aria-hidden="true">{% if project.id in hearted_drawing_ids %}&hearts;{% else %}&#9825;{% endif %}</span>
+                                            <span data-heart-count>{{ project.heart_count }}</span>
+                                        </button>
+                                    {% else %}
+                                        <button class="heart-button" type="button" data-heart-button data-heart-url="{% url 'toggle_drawing_heart' project.public_id %}" data-heart-login-url="{% url 'login' %}?next={{ request.get_full_path|urlencode }}" data-auth-prompt="Create an account to heart drawings and interact with the MasDraw showcase." aria-pressed="false">
+                                            <span class="heart-icon" data-heart-icon aria-hidden="true">&#9825;</span>
+                                            <span data-heart-count>{{ project.heart_count }}</span>
+                                        </button>
+                                    {% endif %}
+                                    <span class="comment-count-pill" aria-label="{{ project.comment_count }} comments">
+                                        <span>{{ project.comment_count }}</span>
+                                        <span>Comments</span>
+                                    </span>
+                                    <span class="view-link">Open</span>
+                                </div>
+                            </div>
+                        </a>
+                    {% endfor %}
+                    </div>
+
+                    {% if page_obj.has_other_pages %}
+                        <nav class="pagination" aria-label="Latest sketches pagination">
+                            <div class="pagination-summary">
+                                Page {{ page_obj.number }} of {{ paginator.num_pages }}
+                            </div>
+                            <div class="pagination-actions">
+                                {% if page_obj.has_previous %}
+                                    <a class="pagination-link" href="?page=1">First</a>
+                                    <a class="pagination-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                                {% else %}
+                                    <span class="pagination-link is-disabled">First</span>
+                                    <span class="pagination-link is-disabled">Previous</span>
+                                {% endif %}
+
+                                {% if page_obj.has_next %}
+                                    <a class="pagination-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                                    <a class="pagination-link" href="?page={{ paginator.num_pages }}">Last</a>
+                                {% else %}
+                                    <span class="pagination-link is-disabled">Next</span>
+                                    <span class="pagination-link is-disabled">Last</span>
+                                {% endif %}
+                            </div>
+                        </nav>
+                    {% endif %}
+                </section>
+            {% else %}
+                {% if not featured_projects %}
+                    <div class="empty-gallery card">
+                        <img src="{% static 'assets/logo.png' %}" alt="">
+                        <h2>No published Masbate drawings yet.</h2>
+                        <p>Be the first creator to sketch something inspired by the province and publish it to the showcase.</p>
+                        <form method="post" action="{% url 'start_drawing' %}">
+                            {% csrf_token %}
+                            <button class="button button-primary" type="submit">Start Drawing</button>
+                        </form>
+                    </div>
+                {% endif %}
+            {% endif %}
+        </div>
+    </section>
+
+    <div class="quick-preview-modal is-hidden" data-preview-modal role="dialog" aria-modal="true" aria-labelledby="previewTitle">
+        <div class="quick-preview-card">
+            <button class="quick-preview-close" type="button" data-preview-close aria-label="Close preview">Close</button>
+            <div class="quick-preview-image">
+                <img src="" alt="" data-preview-image>
+            </div>
+            <div class="quick-preview-meta">
+                <span class="content-badge">Preview</span>
+                <h2 id="previewTitle" data-preview-title></h2>
+                <p data-preview-date></p>
+                <a class="button button-primary" href="#" data-preview-link>Open Sketch</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/showcase.js' %}"></script>
+{% endblock %}

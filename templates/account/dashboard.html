@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+
+{% block page_title %}My Account | MasDraw{% endblock %}
+{% block page_description %}Manage your claimed MasDraw drawings, claim anonymous sketches, and return to the public showcase.{% endblock %}
+{% block meta_robots %}noindex,nofollow{% endblock %}
+
+{% block content %}
+    <section class="section account-section">
+        <div class="container account-dashboard-shell">
+            <div class="account-dashboard-hero">
+                <div class="account-dashboard-copy">
+                    <p class="section-kicker">Account dashboard</p>
+                    <h1>Welcome, {{ request.user.username }}.</h1>
+                    <p>Manage claimed sketches, track showcase activity, and keep creating anonymously when you want a fresh start.</p>
+                </div>
+                <div class="account-dashboard-primary-actions">
+                    <a class="button button-primary" href="{% url 'my_drawings' %}">Open My Drawings</a>
+                    <a class="button button-secondary" href="{% url 'claim_drawing' %}">Claim Drawing</a>
+                    <form method="post" action="{% url 'start_drawing' %}">
+                        {% csrf_token %}
+                        <button class="button button-secondary" type="submit">Start New Drawing</button>
+                    </form>
+                </div>
+            </div>
+
+            {% if messages %}
+                <div class="flash-messages" role="status" aria-live="polite">
+                    {% for message in messages %}
+                        <p class="flash-message flash-message-{{ message.tags }}">{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <section class="dashboard-stats-grid" aria-label="Account drawing analytics">
+                <article class="dashboard-stat-card card">
+                    <span>Total claimed</span>
+                    <strong>{{ total_count }}</strong>
+                    <p>Drawings connected to this account.</p>
+                </article>
+                <article class="dashboard-stat-card card">
+                    <span>Published</span>
+                    <strong>{{ published_count }}</strong>
+                    <p>Sketches visible in the public showcase.</p>
+                </article>
+                <article class="dashboard-stat-card card">
+                    <span>Private</span>
+                    <strong>{{ private_count }}</strong>
+                    <p>Sketches only you can open from your account.</p>
+                </article>
+                <article class="dashboard-stat-card card">
+                    <span>Total hearts</span>
+                    <strong>{{ total_hearts }}</strong>
+                    <p>Hearts received across your claimed drawings.</p>
+                </article>
+                <article class="dashboard-stat-card card">
+                    <span>Total comments</span>
+                    <strong>{{ total_comments }}</strong>
+                    <p>Comments received across your public drawings.</p>
+                </article>
+            </section>
+
+            <section class="dashboard-main-grid">
+                <article class="dashboard-action-card card">
+                    <div>
+                        <span class="feature-icon">M</span>
+                        <h2>My Drawings</h2>
+                        <p>Review claimed sketches, open private work, and visit public pages for published drawings.</p>
+                    </div>
+                    <a class="button button-primary" href="{% url 'my_drawings' %}">Manage Drawings</a>
+                </article>
+
+                <article class="dashboard-action-card card">
+                    <div>
+                        <span class="feature-icon">C</span>
+                        <h2>Claim Drawing</h2>
+                        <p>Paste a recovery key to attach anonymous drawings to this account.</p>
+                    </div>
+                    <a class="button button-primary" href="{% url 'claim_drawing' %}">Claim With Key</a>
+                </article>
+
+                <article class="dashboard-action-card card">
+                    <div>
+                        <span class="feature-icon">D</span>
+                        <h2>Start New Drawing</h2>
+                        <p>Create anonymously first. Save the recovery key if you want to claim it later.</p>
+                    </div>
+                    <form method="post" action="{% url 'start_drawing' %}">
+                        {% csrf_token %}
+                        <button class="button button-primary" type="submit">Open Canvas</button>
+                    </form>
+                </article>
+
+                <article class="dashboard-action-card card">
+                    <div>
+                        <span class="feature-icon">S</span>
+                        <h2>Showcase</h2>
+                        <p>Browse public sketches, heart drawings, and join comment threads.</p>
+                    </div>
+                    <a class="button button-primary" href="{% url 'showcase' %}">View Showcase</a>
+                </article>
+            </section>
+
+            <section class="dashboard-recent-section">
+                <div class="split-heading">
+                    <div>
+                        <p class="section-kicker">Recent drawings</p>
+                        <h2>Continue where you left off.</h2>
+                        <p>Your latest claimed sketches appear here for fast access.</p>
+                    </div>
+                    <a class="button button-secondary" href="{% url 'my_drawings' %}">See All Drawings</a>
+                </div>
+
+                {% if recent_drawings %}
+                    <div class="dashboard-recent-grid">
+                        {% for project in recent_drawings %}
+                            <article class="dashboard-recent-card card">
+                                <a class="dashboard-recent-preview" href="{% url 'drawing_detail' project.public_id %}" aria-label="Open {{ project.title|default:'Untitled Drawing' }}">
+                                    {% if project.preview_image %}
+                                        <img src="{{ project.preview_image }}" alt="{{ project.title|default:'Claimed MasDraw drawing' }}" loading="lazy">
+                                    {% else %}
+                                        <span>No preview yet</span>
+                                    {% endif %}
+                                </a>
+                                <div class="dashboard-recent-body">
+                                    <div>
+                                        <h3>{{ project.title|default:"Untitled Drawing" }}</h3>
+                                        {% if project.is_published %}
+                                            <span class="status-badge status-published">Published</span>
+                                        {% else %}
+                                            <span class="status-badge status-private">Private</span>
+                                        {% endif %}
+                                    </div>
+                                    <dl class="my-drawing-stats">
+                                        <div>
+                                            <dt>Hearts</dt>
+                                            <dd>{{ project.heart_count }}</dd>
+                                        </div>
+                                        <div>
+                                            <dt>Comments</dt>
+                                            <dd>{{ project.comment_count }}</dd>
+                                        </div>
+                                    </dl>
+                                    <a class="button button-secondary" href="{% url 'drawing_detail' project.public_id %}">Open Drawing</a>
+                                </div>
+                            </article>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-account-state card">
+                        <h2>No claimed drawings yet.</h2>
+                        <p>Claim an anonymous drawing with a recovery key, or start a new sketch and save the key for later.</p>
+                        <div class="empty-state-actions">
+                            <a class="button button-primary" href="{% url 'claim_drawing' %}">Claim Drawing</a>
+                            <form method="post" action="{% url 'start_drawing' %}">
+                                {% csrf_token %}
+                                <button class="button button-secondary" type="submit">Start New Drawing</button>
+                            </form>
+                        </div>
+                    </div>
+                {% endif %}
+            </section>
+
+            <section class="account-profile-card card">
+                <div class="account-avatar">
+                    {% if profile and profile.profile_image %}
+                        <img src="{{ profile.profile_image }}" alt="{{ request.user.username }} profile picture">
+                    {% else %}
+                        <span>{{ request.user.username|slice:":1"|upper }}</span>
+                    {% endif %}
+                </div>
+                <div class="account-profile-copy">
+                    <p class="section-kicker">Profile picture</p>
+                    <h2>Use your own sketch as your avatar.</h2>
+                    <p>Select any claimed drawing that already has a saved preview. The selected image can appear publicly beside your comments.</p>
+                </div>
+                <a class="button button-secondary" href="{% url 'account_profile_picture' %}">Choose Sketch</a>
+            </section>
+
+            <form class="account-logout-form" method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button class="button button-secondary" type="submit">Logout</button>
+            </form>
+        </div>
+    </section>
+{% endblock %}

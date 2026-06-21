@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_title %}About MasDraw | Free Anonymous Drawing Platform{% endblock %}
+{% block page_description %}Learn about MasDraw, a free anonymous drawing website built for simple online sketching, private saving, and creative sharing in Masbate.{% endblock %}
+{% block canonical_url %}{{ request.scheme }}://{{ request.get_host }}{% url 'about' %}{% endblock %}
+{% block og_title %}About MasDraw | Free Anonymous Drawing Platform{% endblock %}
+{% block og_description %}Learn about MasDraw, a free anonymous drawing website built for simple online sketching, private saving, and creative sharing in Masbate.{% endblock %}
+{% block og_url %}{{ request.scheme }}://{{ request.get_host }}{% url 'about' %}{% endblock %}
+{% block twitter_title %}About MasDraw | Free Anonymous Drawing Platform{% endblock %}
+{% block twitter_description %}Learn about MasDraw, a free anonymous drawing website built for simple online sketching, private saving, and creative sharing in Masbate.{% endblock %}
+{% block body_class %}seo-landing-page{% endblock %}
+
+{% block structured_data %}
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "AboutPage",
+            "name": "About MasDraw",
+            "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'about' %}",
+            "description": "Learn about MasDraw, a free anonymous drawing website built for simple online sketching, private saving, and creative sharing in Masbate."
+        }
+    </script>
+{% endblock %}
+
+{% block content %}
+    <section class="hero-section">
+        <div class="container hero-grid">
+            <div class="hero-copy-block fade-up">
+                <p class="section-kicker">About MasDraw</p>
+                <h1 class="hero-title">About MasDraw</h1>
+                <p class="hero-text">
+                    MasDraw is a free anonymous drawing website built for simple online sketching, private saving,
+                    and creative sharing in Masbate. It was created to give students, artists, hobbyists, and
+                    local creators a way to express ideas visually without barriers.
+                </p>
+                <div class="hero-actions">
+                    <a class="button button-primary" href="{% url 'home' %}">Go to Homepage</a>
+                    <a class="button button-secondary" href="{% url 'showcase' %}">View Showcase</a>
+                </div>
+            </div>
+
+            <aside class="hero-proof fade-up" aria-label="About MasDraw summary">
+                <img class="hero-proof-logo" src="{% static 'assets/logo.png' %}" alt="">
+                <h2>A creative space for Masbate-inspired art.</h2>
+                <ul class="proof-list">
+                    <li><span class="proof-dot blue"></span>Free and anonymous</li>
+                    <li><span class="proof-dot green"></span>No signup required</li>
+                    <li><span class="proof-dot pink"></span>Masbate-themed creativity</li>
+                </ul>
+            </aside>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="section-heading">
+                <p class="section-kicker">Our mission</p>
+                <h2>What is MasDraw?</h2>
+                <p>
+                    MasDraw is a free anonymous online drawing platform for people in Masbate. It allows users
+                    to create simple digital drawings without creating an account, save their work privately
+                    using a recovery key, and optionally share selected drawings in a public showcase.
+                </p>
+            </div>
+
+            <div class="feature-grid">
+                <article class="card feature-card">
+                    <div class="feature-icon">A</div>
+                    <h3>Anonymous by Design</h3>
+                    <p>No account, no email, no identity required. Just open the canvas and start drawing. Your privacy is respected from the first stroke.</p>
+                </article>
+                <article class="card feature-card">
+                    <div class="feature-icon">K</div>
+                    <h3>Recovery Key System</h3>
+                    <p>Every drawing gets a private recovery key. Save it to continue your work later from any device or browser - no login needed.</p>
+                </article>
+                <article class="card feature-card">
+                    <div class="feature-icon">S</div>
+                    <h3>Public Showcase</h3>
+                    <p>When your artwork is ready, publish it to the MasDraw showcase. Share your Masbate-inspired creativity with the world on your terms.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="section-heading">
+                <p class="section-kicker">Why MasDraw exists</p>
+                <h2>Built for Masbate creativity</h2>
+                <p>
+                    MasDraw was created because simple, accessible creative tools should be available to everyone.
+                    Whether you are a student sketching for a school project, an artist exploring Masbate-inspired themes,
+                    or someone who simply wants to doodle, MasDraw provides a quick and easy way to do it online.
+                </p>
+            </div>
+
+            <div class="feature-grid">
+                <article class="card feature-card">
+                    <div class="feature-icon">01</div>
+                    <h3>No Barriers to Entry</h3>
+                    <p>No app downloads, no account creation, no cost. MasDraw works directly in your web browser on any device.</p>
+                </article>
+                <article class="card feature-card">
+                    <div class="feature-icon">02</div>
+                    <h3>Locally Inspired</h3>
+                    <p>The platform takes creative cues from Masbate's island landscapes, rodeo culture, festival energy, and growing local arts scene.</p>
+                </article>
+                <article class="card feature-card">
+                    <div class="feature-icon">03</div>
+                    <h3>Privacy First</h3>
+                    <p>Your drawings are private by default. Only you decide if and when to publish your work to the public showcase.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="section-heading">
+                <p class="section-kicker">How it works</p>
+                <h2>Simple creative flow from start to share</h2>
+            </div>
+
+            <div class="steps-grid">
+                <article class="card step-card">
+                    <div class="step-icon">1</div>
+                    <h3>Open the canvas</h3>
+                    <p>Click "Start Drawing" to open a blank canvas. No signup or login required.</p>
+                </article>
+                <article class="card step-card">
+                    <div class="step-icon">2</div>
+                    <h3>Create your artwork</h3>
+                    <p>Use brushes, colors, shapes, and text tools to bring your idea to life on the digital canvas.</p>
+                </article>
+                <article class="card step-card">
+                    <div class="step-icon">3</div>
+                    <h3>Save your recovery key</h3>
+                    <p>Keep your private recovery key safe. Use it to return to your drawing from any browser or device.</p>
+                </article>
+                <article class="card step-card">
+                    <div class="step-icon">4</div>
+                    <h3>Publish when ready</h3>
+                    <p>Add a title and publish your finished drawing to the public MasDraw showcase for others to discover.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="cta-strip">
+                <div>
+                    <h2>Ready to create something?</h2>
+                    <p>No signup, no setup. Just open the canvas and start drawing.</p>
+                </div>
+                <a class="button button-secondary" href="{% url 'home' %}">Go to Homepage</a>
+            </div>
+        </div>
+    </section>
+{% endblock %}

@@ -1,0 +1,134 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+
+    <!-- Google site verification -->
+    <meta name="google-site-verification" content="emkLGSpvyqCH-zht7637kpKVWj5-7ih1vQk-WC9n6QM" />
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block page_title %}MasDraw | Anonymous Drawing for Masbate Online{% endblock %}</title>
+    <link rel="icon" href="/static/favicon-48x48.png" type="image/png" sizes="48x48">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" sizes="any">
+    <meta name="description" content="{% block page_description %}MasDraw is an anonymous drawing website for Masbate-inspired art. Draw online without login, save privately with a recovery key, and publish to the public showcase when ready.{% endblock %}">
+    <meta name="robots" content="{% block meta_robots %}index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1{% endblock %}">
+    <link rel="canonical" href="{% block canonical_url %}{{ request.build_absolute_uri }}{% endblock %}">
+
+    <meta property="og:site_name" content="MasDraw">
+    <meta property="og:locale" content="en_PH">
+    <meta property="og:title" content="{% block og_title %}MasDraw | Anonymous Drawing for Masbate Online{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}MasDraw is an anonymous drawing website for Masbate-inspired art. Draw online without login, save privately with a recovery key, and publish to the public showcase when ready.{% endblock %}">
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+    <meta property="og:url" content="{% block og_url %}{{ request.build_absolute_uri }}{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'assets/logo-with-text.png' %}{% endblock %}">
+    <meta property="og:image:alt" content="{% block og_image_alt %}MasDraw anonymous drawing platform{% endblock %}">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{% block twitter_title %}MasDraw | Anonymous Drawing for Masbate Online{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}MasDraw is an anonymous drawing website for Masbate-inspired art. Draw online without login, save privately with a recovery key, and publish to the public showcase when ready.{% endblock %}">
+    <meta name="twitter:image" content="{% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'assets/logo-with-text.png' %}{% endblock %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    {% block extra_css %}{% endblock %}
+    {% block structured_data %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+    <header class="site-header" data-site-header>
+        <div class="container nav-shell">
+            <a class="brand-link" href="{% url 'home' %}" aria-label="masdraw home">
+                <img src="{% static 'assets/logo-with-text.png' %}" alt="masdraw">
+            </a>
+
+            <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-menu" data-nav-toggle>
+                <span></span>
+            </button>
+
+            <nav class="site-nav" id="site-menu" data-site-nav>
+                <form method="post" action="{% url 'start_drawing' %}">
+                    {% csrf_token %}
+                    <button type="submit">Draw</button>
+                </form>
+                <a href="{% url 'showcase' %}">Showcase</a>
+                <span class="nav-auth-group" data-auth-nav>
+                    {% if request.user.is_authenticated %}
+                        <a href="{% url 'my_drawings' %}">My Drawings</a>
+                        <a href="{% url 'account_dashboard' %}">My Account</a>
+                        <form method="post" action="{% url 'logout' %}" data-auth-logout>
+                            {% csrf_token %}
+                            <button type="submit">Logout</button>
+                        </form>
+                    {% else %}
+                        <a href="{% url 'login' %}" data-auth-modal="login">Login</a>
+                        <a href="{% url 'register' %}" data-auth-modal="register">Register</a>
+                    {% endif %}
+                </span>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="container site-footer-inner">
+            <nav class="footer-nav" aria-label="Footer navigation">
+                <div class="footer-nav-group">
+                    <strong>MasDraw</strong>
+                    <a href="{% url 'home' %}">Home</a>
+                    <a href="{% url 'anonymous_drawing_masbate_online' %}">Anonymous Drawing</a>
+                    <a href="{% url 'showcase' %}">Showcase</a>
+                </div>
+                <div class="footer-nav-group">
+                    <strong>Information</strong>
+                    <a href="{% url 'about' %}">About</a>
+                    <a href="{% url 'faq' %}">FAQ</a>
+                </div>
+                <div class="footer-nav-group">
+                    <strong>Legal</strong>
+                    <a href="{% url 'privacy_policy' %}">Privacy Policy</a>
+                    <a href="{% url 'terms' %}">Terms of Use</a>
+                </div>
+            </nav>
+            <div class="footer-bottom">
+                <span>&copy; 2026 MasDraw. All rights reserved.</span>
+                <span class="powered-by">
+                    Powered by
+                    <a href="https://billingko.com" target="_blank" rel="noopener noreferrer" aria-label="Powered by billingko.com">
+                        <img src="{% static 'assets/billingko.png' %}" alt="billingko.com">
+                    </a>
+                </span>
+            </div>
+        </div>
+    </footer>
+
+    <div class="auth-modal" data-auth-modal-shell aria-hidden="true">
+        <div class="auth-modal-backdrop" data-auth-modal-close></div>
+        <div class="auth-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title" tabindex="-1" data-auth-modal-dialog>
+            <div class="auth-modal-header">
+                <h2 id="auth-modal-title" data-auth-modal-title>Account</h2>
+                <button class="auth-modal-close" type="button" data-auth-modal-close aria-label="Close popup">Close</button>
+            </div>
+            <div class="auth-modal-status" data-auth-modal-status role="status" aria-live="polite"></div>
+            <div class="auth-modal-content" data-auth-modal-content></div>
+        </div>
+    </div>
+
+    <div class="toast-message" data-auth-toast role="status" aria-live="polite" aria-hidden="true"></div>
+
+    <div class="page-loader" data-page-loader aria-live="polite" aria-hidden="true">
+        <div class="page-loader-card">
+            <span class="page-spinner" aria-hidden="true"></span>
+            <span>Loading...</span>
+        </div>
+    </div>
+
+    <script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'js/account.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

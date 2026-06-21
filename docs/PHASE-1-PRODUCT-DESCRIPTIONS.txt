@@ -1,0 +1,193 @@
+PHASE 1 PRODUCT DESCRIPTIONS
+Project: MasDraw
+Primary domain: https://masdraw.masbate.top
+Current product stage: MVP with SEO discovery, anonymous drawing, private recovery, and public showcase.
+
+1. PRODUCT SUMMARY
+
+MasDraw is a free anonymous online drawing platform focused on Masbate-inspired creativity. Users can open a browser-based canvas without signup, create a drawing, save it privately with a recovery key, and publish selected finished artwork to a public showcase.
+
+The product is not trying to compete with professional design tools. Its practical wedge is simple: "Can I draw anonymously in Masbate online?" MasDraw should own that search intent and convert visitors into creators.
+
+2. REAL PROBLEM
+
+People who want to make simple digital drawings usually face friction:
+- account creation
+- app installation
+- social profile exposure
+- complex design tools
+- no simple local creative space for Masbate-related artwork
+
+MasDraw solves this by giving users a fast creative workflow:
+- open the site
+- start drawing
+- save with a recovery key
+- publish only if they choose
+
+The local Masbate angle is the positioning advantage. It makes the product more searchable and more memorable than a generic drawing website.
+
+3. TARGET USERS
+
+Primary users:
+- students who need a fast drawing tool for simple ideas or school activities
+- local Masbate artists and hobbyists
+- people who want to create anonymous sketches without a public profile
+- visitors searching for Masbate drawing, anonymous drawing, or local creative pages
+
+Secondary users:
+- teachers who want a simple no-signup creative activity
+- community groups that want lightweight visual submissions
+- local event organizers who may want public art prompts or contests
+
+Not the target user in Phase 1:
+- professional illustrators needing layers, exports, tablets, asset libraries, or collaboration
+- design teams needing Figma-style workflows
+- users needing private encrypted storage with account-level permissions
+
+4. BEST STRATEGY
+
+Phase 1 strategy is SEO-led product validation.
+
+The product should rank for narrow, local, high-intent queries before trying to become a broad drawing platform. The strongest keywords are:
+- anonymous drawing in Masbate
+- Masbate drawing online
+- draw anonymously in Masbate
+- MasDraw
+- Mas Draw
+- Masbate online sketch
+- Masbate art showcase
+
+The best product loop:
+1. User discovers MasDraw from search or social share.
+2. User opens the canvas without signup.
+3. User saves a drawing and keeps the recovery key.
+4. User publishes a titled drawing.
+5. Published drawing becomes a new public page.
+6. Public page expands search coverage and sends more users back to the canvas.
+
+The current architecture already supports this loop.
+
+5. CORE FEATURES
+
+Current Phase 1 features:
+- anonymous drawing session creation
+- recovery key generation
+- recovery key hashing
+- browser token cookie for recent drawing convenience
+- drawing canvas with brush, eraser, highlighter, text, line, rectangle, circle, fill, color picker, undo, symmetry, zoom, pan, and fullscreen
+- canvas size options for landscape, square, portrait, and wide
+- server-side save endpoint for drawing data and preview image
+- publish endpoint requiring saved preview and non-empty title
+- public showcase with featured and latest drawings
+- individual published artwork pages
+- quick preview modal in showcase
+- SEO landing page for "Anonymous Drawing in Masbate Online"
+- FAQ, About, Privacy Policy, Terms, sitemap, robots.txt, favicon, and structured data
+
+6. USER VALUE PROPOSITION
+
+Short version:
+Draw anonymously in Masbate online. No signup. Save privately. Publish when ready.
+
+Long version:
+MasDraw gives people in Masbate a simple browser canvas for local creative expression. Users do not need an account or app download. They can sketch privately, recover their work with a key, and publish finished drawings to a public Masbate showcase.
+
+7. POSITIONING
+
+Best positioning:
+MasDraw is the anonymous drawing website for Masbate-inspired online sketches.
+
+Avoid positioning it as:
+- a professional drawing suite
+- a social network
+- a private vault
+- an AI art generator
+- a general Canva/Figma alternative
+
+The product should stay focused on speed, anonymity, local identity, and public discovery.
+
+8. PHASE 1 EXECUTION STEPS
+
+Immediate product priorities:
+1. Keep one canonical domain: https://masdraw.masbate.top.
+2. Make sure old domains redirect permanently to the canonical domain.
+3. Strengthen the landing page answer for exact search queries like "Can I draw anonymously in Masbate?"
+4. Add more real published drawings with descriptive titles.
+5. Add local backlinks from Masbate-related pages, posts, directories, or community groups.
+6. Keep the canvas stable on mobile, because casual users may come from phones.
+7. Add an admin/manual removal process for published drawings.
+8. Track basic metrics: visits, started drawings, saved drawings, published drawings, recoveries, and showcase clicks.
+
+9. MONETIZATION
+
+Do not monetize too early. Phase 1 should validate usage and search demand first.
+
+Best future monetization paths:
+- sponsored local art prompts from businesses or events
+- paid featured placement for contests or community campaigns
+- school or organization private gallery package
+- downloadable certificate or showcase badge for events
+- local creative contest pages
+- lightweight ads only after stable organic traffic exists
+
+Avoid:
+- charging individual casual users immediately
+- forcing accounts before validating anonymous usage
+- adding heavy marketplace features before there is supply and demand
+
+10. SCALING PLAN
+
+Phase 1:
+- SQLite is acceptable for validation.
+- Base64 preview images in the database are acceptable for low traffic.
+- Manual moderation is acceptable.
+
+Phase 2:
+- move preview images to object storage
+- move database to PostgreSQL
+- add moderation queue
+- add delete/unpublish request flow
+- add analytics events
+- improve recovery performance
+- add image export/download
+- add prompt-based drawing challenges
+
+Phase 3:
+- organization/event galleries
+- contest mode
+- user opt-in profiles
+- local creative campaigns
+- paid sponsorship packages
+
+11. SUCCESS METRICS
+
+Phase 1 metrics:
+- Google indexed canonical pages
+- Bing indexed canonical pages
+- favicon and brand display correctly in search
+- top 10 search position for "anonymous drawing in Masbate"
+- at least 100 organic visits
+- at least 20 started drawings
+- at least 5 saved drawings
+- at least 3 published drawings with real titles
+- at least 2 local backlinks or mentions
+
+Product quality metrics:
+- save success rate
+- publish success rate
+- recovery success rate
+- mobile canvas usability
+- average number of strokes/elements per saved drawing
+
+12. BRUTAL FEEDBACK
+
+MasDraw has a good narrow wedge, but it is fragile if it stays as only a drawing toy. The SEO angle gives it distribution, but the product needs real published artwork and local backlinks to become trusted by Google. Empty or low-quality showcase content will weaken the product.
+
+The biggest risk is not technology. The biggest risk is lack of usage. A drawing platform needs visible activity. If users arrive and see no strong examples, they may not publish. Seed the showcase with real Masbate-inspired drawings and clear titles.
+
+The second biggest risk is trust. Anonymous tools can attract low-quality or abusive content. Phase 1 needs at least a manual moderation and removal workflow, even if it is admin-only.
+
+The third risk is overbuilding. Do not add accounts, subscriptions, AI tools, social feeds, comments, likes, or complex editing until the core loop proves demand.
+
+The correct Phase 1 goal is simple:
+Own the local anonymous drawing search intent, make the canvas usable, publish enough real artwork to look alive, and prove people want this before scaling.

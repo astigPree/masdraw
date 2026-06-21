@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_title %}404 - Not Found | masdraw{% endblock %}
+{% block page_description %}That page doesn’t exist on masdraw. Jump back home, open the showcase, or recover a saved sketch.{% endblock %}
+{% block body_class %}not-found-page{% endblock %}
+{% block meta_robots %}noindex,follow{% endblock %}
+{% block og_title %}404 - Not Found | masdraw{% endblock %}
+{% block og_description %}That page doesn’t exist on masdraw. Jump back home, open the showcase, or recover a saved sketch.{% endblock %}
+{% block twitter_title %}404 - Not Found | masdraw{% endblock %}
+{% block twitter_description %}That page doesn’t exist on masdraw. Jump back home, open the showcase, or recover a saved sketch.{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/not_found.css' %}">
+{% endblock %}
+
+{% block content %}
+    <section class="not-found-section">
+        <div class="container">
+            <div class="not-found-card card fade-up">
+                <div class="not-found-badge">404</div>
+                <h1>That page isn’t on the island.</h1>
+                <p>
+                    The link you followed doesn’t exist (or it moved).
+                    If you were looking for a sketch, it may not be published yet.
+                </p>
+
+                <div class="not-found-actions">
+                    <a class="button button-primary" href="{% url 'home' %}">Back Home</a>
+                    <a class="button button-secondary" href="{% url 'showcase' %}">Open Showcase</a>
+                    <a class="button button-secondary" href="{% url 'recover_drawing' %}">Recover Drawing</a>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

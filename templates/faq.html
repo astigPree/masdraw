@@ -1,0 +1,200 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_title %}MasDraw FAQ | Anonymous Drawing Questions Answered{% endblock %}
+{% block page_description %}Find answers about how MasDraw works, how to save drawings, how recovery keys work, and how anonymous online drawing is handled.{% endblock %}
+{% block canonical_url %}{{ request.scheme }}://{{ request.get_host }}{% url 'faq' %}{% endblock %}
+{% block og_title %}MasDraw FAQ | Anonymous Drawing Questions Answered{% endblock %}
+{% block og_description %}Find answers about how MasDraw works, how to save drawings, how recovery keys work, and how anonymous online drawing is handled.{% endblock %}
+{% block og_url %}{{ request.scheme }}://{{ request.get_host }}{% url 'faq' %}{% endblock %}
+{% block twitter_title %}MasDraw FAQ | Anonymous Drawing Questions Answered{% endblock %}
+{% block twitter_description %}Find answers about how MasDraw works, how to save drawings, how recovery keys work, and how anonymous online drawing is handled.{% endblock %}
+{% block body_class %}seo-landing-page{% endblock %}
+
+{% block structured_data %}
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+                {
+                    "@type": "Question",
+                    "name": "What is MasDraw?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "MasDraw is a free anonymous online drawing platform for people in Masbate. It allows users to create digital drawings without creating an account, save privately using a recovery key, and optionally share selected drawings in a public showcase."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "Do I need to create an account to use MasDraw?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "No. MasDraw is fully anonymous. You can start drawing immediately without signup, email, or login. A recovery key is provided so you can return to your drawing later."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "How do I save my drawing on MasDraw?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Click the Save button on the drawing canvas. Your drawing is saved on the server. Keep your recovery key safe - it is the only way to access your drawing again from a different browser or device."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "What is a recovery key?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "A recovery key is a private code generated when you start a new drawing. It works like a password. Paste it on the Recover Drawing page to reopen your artwork. MasDraw does not store your identity, so the key is the only way to access your work."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "Can I publish my drawing publicly?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Yes. After saving your drawing and adding a title, you can publish it to the MasDraw public showcase. Published drawings are visible to all visitors. You control when and whether your work becomes public."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "Can I delete a published drawing?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Currently, once a drawing is published, it cannot be unpublished through the interface. Contact MasDraw support if you need a published drawing removed."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "Is MasDraw free to use?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Yes. MasDraw is completely free. There are no paid features, subscriptions, or hidden costs."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "What devices work with MasDraw?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "MasDraw works in any modern web browser on desktop, laptop, tablet, or mobile phone. No app download is required."
+                    }
+                }
+            ]
+        }
+    </script>
+{% endblock %}
+
+{% block content %}
+    <section class="hero-section">
+        <div class="container hero-grid">
+            <div class="hero-copy-block fade-up">
+                <p class="section-kicker">Frequently asked questions</p>
+                <h1 class="hero-title">MasDraw FAQ</h1>
+                <p class="hero-text">
+                    Find answers about how MasDraw works, how to save drawings, how recovery keys work,
+                    and how anonymous online drawing is handled on the platform.
+                </p>
+                <div class="hero-actions">
+                    <a class="button button-primary" href="{% url 'home' %}">Go to Homepage</a>
+                    <a class="button button-secondary" href="{% url 'showcase' %}">View Showcase</a>
+                </div>
+            </div>
+
+            <aside class="hero-proof fade-up" aria-label="FAQ summary">
+                <img class="hero-proof-logo" src="{% static 'assets/logo.png' %}" alt="">
+                <h2>Everything you need to know about MasDraw.</h2>
+                <ul class="proof-list">
+                    <li><span class="proof-dot blue"></span>Anonymous drawing explained</li>
+                    <li><span class="proof-dot green"></span>Recovery key details</li>
+                    <li><span class="proof-dot pink"></span>Publishing and sharing</li>
+                </ul>
+            </aside>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="section-heading">
+                <p class="section-kicker">General questions</p>
+                <h2>About MasDraw and how it works</h2>
+            </div>
+
+            <div class="feature-grid">
+                <article class="card feature-card">
+                    <h3>What is MasDraw?</h3>
+                    <p>MasDraw is a free anonymous online drawing platform for people in Masbate. It allows users to create digital drawings without creating an account, save privately using a recovery key, and optionally share selected drawings in a public showcase.</p>
+                </article>
+                <article class="card feature-card">
+                    <h3>Do I need to create an account?</h3>
+                    <p>No. MasDraw is fully anonymous. You can start drawing immediately without signup, email, or login. A recovery key is provided so you can return to your drawing later.</p>
+                </article>
+                <article class="card feature-card">
+                    <h3>Is MasDraw free to use?</h3>
+                    <p>Yes. MasDraw is completely free. There are no paid features, subscriptions, or hidden costs.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="section-heading">
+                <p class="section-kicker">Saving and recovery</p>
+                <h2>How saving and recovery keys work</h2>
+            </div>
+
+            <div class="feature-grid">
+                <article class="card feature-card">
+                    <h3>How do I save my drawing?</h3>
+                    <p>Click the Save button on the drawing canvas. Your drawing is saved on the server. Keep your recovery key safe - it is the only way to access your drawing again from a different browser or device.</p>
+                </article>
+                <article class="card feature-card">
+                    <h3>What is a recovery key?</h3>
+                    <p>A recovery key is a private code generated when you start a new drawing. It works like a password. Paste it on the <a href="{% url 'recover_drawing' %}">Recover Drawing</a> page to reopen your artwork. MasDraw does not store your identity, so the key is the only way to access your work.</p>
+                </article>
+                <article class="card feature-card">
+                    <h3>What happens if I lose my recovery key?</h3>
+                    <p>If you lose your recovery key, there is no way to recover your drawing. MasDraw does not collect email or account information, so the key is your only access method. Always save it in a safe place.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="section-heading">
+                <p class="section-kicker">Publishing and sharing</p>
+                <h2>How to publish and share your drawings</h2>
+            </div>
+
+            <div class="feature-grid">
+                <article class="card feature-card">
+                    <h3>Can I publish my drawing publicly?</h3>
+                    <p>Yes. After saving your drawing and adding a title, you can publish it to the <a href="{% url 'showcase' %}">MasDraw public showcase</a>. Published drawings are visible to all visitors. You control when and whether your work becomes public.</p>
+                </article>
+                <article class="card feature-card">
+                    <h3>Can I delete a published drawing?</h3>
+                    <p>Currently, once a drawing is published, it cannot be unpublished through the interface. Contact MasDraw support if you need a published drawing removed.</p>
+                </article>
+                <article class="card feature-card">
+                    <h3>What devices work with MasDraw?</h3>
+                    <p>MasDraw works in any modern web browser on desktop, laptop, tablet, or mobile phone. No app download is required.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="cta-strip">
+                <div>
+                    <h2>Still have questions?</h2>
+                    <p>Start exploring MasDraw - it is simple, free, and anonymous.</p>
+                </div>
+                <a class="button button-secondary" href="{% url 'home' %}">Go to Homepage</a>
+            </div>
+        </div>
+    </section>
+{% endblock %}

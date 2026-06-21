@@ -1,0 +1,312 @@
+PHASE 1 TECHNICAL DESCRIPTIONS
+Project: MasDraw
+Framework: Django
+Primary domain: https://masdraw.masbate.top
+Current app shape: server-rendered Django pages plus browser canvas JavaScript.
+
+1. TECHNICAL SUMMARY
+
+MasDraw is a Django web application with one main app named base. It serves marketing/SEO pages, an anonymous drawing canvas, private recovery flow, public showcase pages, sitemap, robots.txt, and favicon assets.
+
+The frontend drawing experience is implemented in plain JavaScript on top of an HTML canvas. The backend stores anonymous sessions, drawing JSON, base64 preview images, publication state, and featured ordering.
+
+2. ARCHITECTURE
+
+Current architecture:
+- Django project: masdraw
+- Django app: base
+- Templates: templates/
+- Static CSS/JS/assets: static/
+- Database: SQLite at db.sqlite3
+- Static serving: Django staticfiles with optional WhiteNoise middleware if installed
+- Admin: /3/admin/
+- SEO endpoints: /sitemap.xml, /robots.txt, /favicon.ico
+
+Request flow:
+1. User lands on a public page.
+2. User submits a POST to /draw/start/.
+3. Backend creates an AnonymousDrawingSession and DrawingProject.
+4. Backend returns draw.html with project data and a one-time plain recovery key.
+5. Browser canvas stores strokes, shapes, text, background, canvas size, and preview image.
+6. Browser sends save payload to /draw/<uuid>/save/.
+7. User can publish with /draw/<uuid>/publish/.
+8. Published projects appear in /showcase/ and /showcase/<uuid>/.
+
+3. IMPORTANT FILES
+
+Core backend:
+- masdraw/settings.py
+- masdraw/urls.py
+- base/models.py
+- base/views.py
+- base/urls.py
+- base/sitemaps.py
+- base/admin.py
+- base/tests.py
+
+Core frontend:
+- templates/base.html
+- templates/home.html
+- templates/anonymous_drawing_masbate_online.html
+- templates/draw.html
+- templates/showcase.html
+- templates/showcase_detail.html
+- static/js/draw.js
+- static/js/showcase.js
+- static/js/main.js
+- static/css/base.css
+- static/css/draw.css
+- static/css/showcase.css
+
+Static brand assets:
+- static/favicon.ico
+- static/favicon-48x48.png
+- static/assets/logo.png
+- static/assets/logo-with-text.png
+
+4. DATA MODELS
+
+AnonymousDrawingSession:
+- public_id: UUID public identifier
+- pass_key_hash: hashed recovery key
+- browser_token: browser cookie token for recent drawing convenience
+- is_active: allows session deactivation
+- last_seen_at: updated when session is opened or saved
+- created_at / updated_at: audit timestamps
+
+Important methods:
+- generate_pass_key()
+- generate_browser_token()
+- set_pass_key(raw_pass_key)
+- verify_pass_key(raw_pass_key)
+- mark_seen()
+
+DrawingProject:
+- session: foreign key to AnonymousDrawingSession
+- public_id: UUID public identifier
+- title: optional title, max 120 characters
+- drawing_data_json: JSON drawing model
+- preview_image: base64 image string generated from canvas
+- is_published: public visibility flag
+- published_at: publication timestamp
+- is_featured: curated showcase flag
+- featured_order: ordering for featured drawings
+- created_at / updated_at: audit timestamps
+
+Indexes:
+- is_published plus published_at for public listing
+- is_published plus is_featured plus featured_order plus published_at for featured showcase ordering
+
+5. USER FLOWS
+
+Start drawing:
+- POST /draw/start/
+- rate limited by hashed client IP in Django cache
+- creates session and project
+- returns draw.html
+- sets masdraw_browser_token cookie with HttpOnly and SameSite=Lax
+- shows recovery key to the user
+
+Save drawing:
+- POST /draw/<uuid>/save/
+- expects JSON payload with title, drawing_data_json, and preview_image
+- updates project fields
+- updates session last_seen_at
+- returns JSON success response
+
+Publish drawing:
+- POST /draw/<uuid>/publish/
+- requires preview_image
+- requires non-empty title
+- sets is_published and published_at
+- returns JSON with public detail URL
+
+Recover drawing:
+- GET /recover/ shows form
+- POST /recover/ checks submitted pass key against active session hashes
+- redirects to first project for the matching session
+
+Showcase:
+- GET /showcase/
+- shows featured published projects and latest non-featured published projects
+- paginates latest projects by 20 per page
+
+Published detail:
+- GET /showcase/<uuid>/
+- only serves projects with is_published=True
+- includes VisualArtwork structured data
+- uses preview_image as Open Graph/Twitter image when available
+
+6. FRONTEND DRAWING MODEL
+
+The canvas state is stored as JSON:
+- elements: list of strokes, shapes, and text objects
+- backgroundColor: current canvas background
+- canvasSize: width and height
+
+Supported tools:
+- brush
+- eraser
+- highlighter
+- text
+- move text
+- line
+- rectangle
+- circle
+- fill background
+- undo
+- clear with confirmation
+- symmetry toggle
+- zoom, pan, and fullscreen
+
+Save behavior:
+- manual save button
+- dirty state after edits
+- autosave timer after changes
+- preview image generated with canvas.toDataURL("image/png")
+
+7. API AND INTEGRATION FLOW
+
+Internal endpoints:
+- POST /draw/start/
+- GET /draw/<uuid>/
+- POST /draw/<uuid>/save/
+- POST /draw/<uuid>/publish/
+- GET/POST /recover/
+- GET /showcase/
+- GET /showcase/<uuid>/
+- GET /sitemap.xml
+- GET /robots.txt
+- GET /favicon.ico
+
+External integrations:
+- Google Fonts loaded from fonts.googleapis.com and fonts.gstatic.com
+- Possible hosting/CDN/security layer such as Cloudflare, referenced in the privacy policy
+
+No payment provider, email provider, third-party auth, object storage, or analytics pipeline is currently implemented in the repo.
+
+8. SEO IMPLEMENTATION
+
+Implemented:
+- canonical tags per major public page
+- meta descriptions
+- Open Graph tags
+- Twitter card tags
+- FAQPage structured data on home, FAQ, and SEO landing page
+- WebSite structured data on home
+- WebPage structured data on SEO landing page
+- CollectionPage structured data on showcase
+- VisualArtwork structured data on published detail pages
+- custom sitemap.xml using PRIMARY_SITE_URL
+- robots.txt allowing search crawlers and blocking selected AI-training crawlers
+- stable /favicon.ico route
+- 48x48 PNG favicon reference
+
+Important SEO rule:
+Private drawing pages use noindex,nofollow. Public discovery should come from home, SEO landing page, FAQ, about, showcase, and published detail pages.
+
+9. DEPLOYMENT NOTES
+
+Current settings:
+- DEBUG=False
+- PRIMARY_DOMAIN="masdraw.masbate.top"
+- PRIMARY_SITE_URL="https://masdraw.masbate.top"
+- ALLOWED_HOSTS includes primary domain, localhost, 127.0.0.1, and testserver
+- CSRF_TRUSTED_ORIGINS includes PRIMARY_SITE_URL
+- SECURE_PROXY_SSL_HEADER expects X-Forwarded-Proto=https
+- STATIC_ROOT=BASE_DIR / "staticfiles"
+- STATICFILES_DIRS includes BASE_DIR / "static"
+- MEDIA_ROOT=BASE_DIR / "media"
+
+Deploy checklist:
+1. Install requirements.
+2. Run migrations.
+3. Run tests.
+4. Run collectstatic.
+5. Serve with a real WSGI/ASGI server behind HTTPS.
+6. Ensure old domains permanently redirect to https://masdraw.masbate.top.
+7. Submit https://masdraw.masbate.top/sitemap.xml to Google Search Console and Bing Webmaster Tools.
+
+Useful commands:
+python manage.py test
+python manage.py migrate
+python manage.py collectstatic --noinput
+
+10. SECURITY CONSIDERATIONS
+
+Good current choices:
+- no required accounts or emails
+- recovery key is stored as a hash, not as plain text
+- CSRF protection is used on forms and fetch requests
+- browser token cookie is HttpOnly and SameSite=Lax
+- drawing creation has basic rate limiting
+- private drawing pages are noindex,nofollow
+- admin URL is not the default /admin/
+
+Risks to fix before higher traffic:
+- SECRET_KEY is hardcoded in settings.py and should be moved to an environment variable.
+- SQLite is not ideal for concurrent production writes.
+- preview images are stored as base64 text in the database, which will grow quickly.
+- recovery currently loops through active sessions and checks password hashes one by one; this is acceptable for small data but will become slow.
+- rate limiting depends on Django cache configuration. If default local-memory cache is used, it is not reliable across multiple processes or servers.
+- published drawings cannot currently be deleted or unpublished by users.
+- no explicit moderation queue exists.
+- no file size or payload size validation exists around save_drawing beyond JSON parsing and title length.
+- private drawing URLs are UUID-based but not protected by the recovery key after URL access. Anyone with a private draw URL can open it while the session is active.
+
+11. SCALABILITY NOTES
+
+Current Phase 1 storage is acceptable for validation, but not for scale.
+
+Main scaling bottlenecks:
+- base64 preview_image in database
+- SQLite write concurrency
+- O(n) recovery key verification
+- no background jobs
+- no content moderation workflow
+- no object storage
+- no analytics events
+
+Recommended Phase 2 technical upgrades:
+1. Move database to PostgreSQL.
+2. Move preview images to object storage and store URLs instead of base64 text.
+3. Add cache backend like Redis for rate limiting.
+4. Add moderation status to DrawingProject.
+5. Add admin action for unpublish/remove.
+6. Add payload limits for save requests.
+7. Add event tracking for start, save, publish, recover, and showcase view.
+8. Add health check endpoint for deployment monitoring.
+9. Move SECRET_KEY and domain values to environment variables.
+
+12. CURRENT TEST COVERAGE
+
+Existing tests cover:
+- SEO landing page loads
+- sitemap includes public static pages and published drawings
+- sitemap excludes private drawings
+- robots.txt points to canonical sitemap
+- favicon route serves valid ICO bytes
+- publish requires a non-empty title
+- publish succeeds with title and preview
+
+Missing tests worth adding:
+- start_drawing creates session, project, cookie, and pass key
+- save_drawing validates bad JSON and saves valid payload
+- recover_drawing redirects only with valid pass key
+- private draw pages are noindex
+- published detail pages only show published projects
+- rate limit behavior
+- robots.txt does not contain unsupported directives
+
+13. BRUTAL TECHNICAL FEEDBACK
+
+The current build is good enough for Phase 1 validation, but it is not ready for high-volume public usage without storage and moderation upgrades.
+
+The biggest technical debt is storing preview images as base64 inside the database. That is convenient now, but it will become expensive and slow as drawings grow.
+
+The second biggest issue is recovery lookup. Checking every active session hash is simple but does not scale. For Phase 1 it is acceptable. For Phase 2, recovery should use a lookup-safe token design or a keyed identifier plus hashed secret.
+
+The third issue is abuse handling. Anonymous publishing needs moderation tools before traffic increases. Without moderation, the showcase can become a liability.
+
+The correct technical direction is:
+Keep the current Django MVP, improve SEO and content quality, then upgrade storage, moderation, cache, and database only when usage proves the product.

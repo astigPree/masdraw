@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_title %}My Drawings | MasDraw{% endblock %}
+{% block page_description %}View drawings claimed to your MasDraw account.{% endblock %}
+{% block meta_robots %}noindex,nofollow{% endblock %}
+
+{% block content %}
+    <section class="section account-section">
+        <div class="container account-wide-shell">
+            <div class="section-heading split-heading">
+                <div>
+                    <p class="section-kicker">My drawings</p>
+                    <h1>Your claimed drawings.</h1>
+                    <p>Only drawings connected to your account appear here. Private sketches stay private until you publish them.</p>
+                </div>
+                <div class="heading-actions">
+                    <a class="button button-secondary" href="{% url 'claim_drawing' %}">Claim Drawing</a>
+                    <form method="post" action="{% url 'start_drawing' %}">
+                        {% csrf_token %}
+                        <button class="button button-primary" type="submit">Start New Drawing</button>
+                    </form>
+                </div>
+            </div>
+
+            {% if messages %}
+                <div class="flash-messages" role="status" aria-live="polite">
+                    {% for message in messages %}
+                        <p class="flash-message flash-message-{{ message.tags }}">{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% if drawings %}
+                <section class="drawing-dashboard-panel card" aria-label="Drawing dashboard controls">
+                    <div class="drawing-stat-row">
+                        <button class="drawing-stat-chip is-active" type="button" data-drawing-filter="all">
+                            <span>All</span>
+                            <strong>{{ total_count }}</strong>
+                        </button>
+                        <button class="drawing-stat-chip" type="button" data-drawing-filter="published">
+                            <span>Published</span>
+                            <strong>{{ published_count }}</strong>
+                        </button>
+                        <button class="drawing-stat-chip" type="button" data-drawing-filter="private">
+                            <span>Private</span>
+                            <strong>{{ private_count }}</strong>
+                        </button>
+                    </div>
+
+                    <div class="drawing-search-shell">
+                        <label class="sr-only" for="drawing-search">Search drawings</label>
+                        <input id="drawing-search" type="search" placeholder="Search drawings" autocomplete="off" data-drawing-search>
+                    </div>
+                </section>
+
+                <div class="my-drawings-grid">
+                    {% for project in drawings %}
+                        <article class="my-drawing-card card"
+                            data-drawing-card
+                            data-status="{% if project.is_published %}published{% else %}private{% endif %}"
+                            data-title="{{ project.title|default:'Untitled Drawing'|lower }}">
+                            <a class="my-drawing-preview" href="{% url 'drawing_detail' project.public_id %}" aria-label="Open {{ project.title|default:'Untitled Drawing' }}">
+                                {% if project.preview_image %}
+                                    <img src="{{ project.preview_image }}" alt="{{ project.title|default:'Claimed MasDraw drawing' }}" loading="lazy">
+                                {% else %}
+                                    <div class="my-drawing-empty-preview">No preview yet</div>
+                                {% endif %}
+                                <span class="my-drawing-preview-overlay">Open Drawing</span>
+                            </a>
+                            <div class="my-drawing-body">
+                                <div class="my-drawing-heading">
+                                    <h2 class="my-drawing-title" title="{{ project.title|default:'Untitled Drawing' }}">{{ project.title|default:"Untitled Drawing" }}</h2>
+                                    {% if project.is_published %}
+                                        <span class="status-badge status-published">Published</span>
+                                    {% else %}
+                                        <span class="status-badge status-private">Private</span>
+                                    {% endif %}
+                                </div>
+                                <p class="my-drawing-date">Last updated {{ project.updated_at|date:"M j, Y g:i A" }}</p>
+                                <dl class="my-drawing-stats">
+                                    {% if project.claimed_at %}
+                                        <div>
+                                            <dt>Claimed</dt>
+                                            <dd>{{ project.claimed_at|date:"M j, Y" }}</dd>
+                                        </div>
+                                    {% endif %}
+                                    <div>
+                                        <dt>Hearts</dt>
+                                        <dd>{{ project.heart_count }}</dd>
+                                    </div>
+                                    <div>
+                                        <dt>Comments</dt>
+                                        <dd>{{ project.comment_count }}</dd>
+                                    </div>
+                                </dl>
+                                <div class="my-drawing-actions">
+                                    <a class="button button-primary" href="{% url 'drawing_detail' project.public_id %}">Open Drawing</a>
+                                    {% if project.is_published %}
+                                        <a class="button button-secondary" href="{% url 'showcase_detail' project.public_id %}">View Public Page</a>
+                                    {% endif %}
+                                    {% if project.preview_image %}
+                                        {% if profile and profile.profile_drawing_id == project.id %}
+                                            <span class="profile-picture-selected">Current Profile Picture</span>
+                                        {% else %}
+                                            <form method="post" action="{% url 'account_profile_picture' %}">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="profile_drawing" value="{{ project.public_id }}">
+                                                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                                <button class="button button-secondary" type="submit">Use as Profile Picture</button>
+                                            </form>
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+
+                <div class="empty-account-state card is-hidden" data-drawing-empty-filter>
+                    <h2>No matching drawings.</h2>
+                    <p>Adjust the search or status filter.</p>
+                    <button class="button button-secondary" type="button" data-drawing-clear>Clear Filters</button>
+                </div>
+            {% else %}
+                <div class="empty-account-state card">
+                    <h2>You have no claimed drawings yet.</h2>
+                    <p>Enter your recovery key to claim your anonymous drawings and manage them from your account.</p>
+                    <div class="empty-state-actions">
+                        <a class="button button-primary" href="{% url 'claim_drawing' %}">Claim Drawing</a>
+                        <form method="post" action="{% url 'start_drawing' %}">
+                            {% csrf_token %}
+                            <button class="button button-secondary" type="submit">Start New Drawing</button>
+                        </form>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/my_drawings.js' %}"></script>
+{% endblock %}

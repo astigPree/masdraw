@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block page_title %}Claim Drawing | MasDraw{% endblock %}
+{% block page_description %}Claim an anonymous MasDraw drawing with your recovery key.{% endblock %}
+{% block meta_robots %}noindex,nofollow{% endblock %}
+
+{% block content %}
+    <section class="section account-section">
+        <div class="container account-shell">
+            <div class="section-heading">
+                <p class="section-kicker">Claim drawing</p>
+                <h1>Claim Your Anonymous Drawing</h1>
+                <p>Enter the recovery key you received when you created your drawing. If the key is valid, your drawing will be added to your account.</p>
+            </div>
+
+            {% if messages %}
+                <div class="flash-messages" role="status" aria-live="polite">
+                    {% for message in messages %}
+                        <p class="flash-message flash-message-{{ message.tags }}">{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="auth-card card">
+                <form class="auth-form" method="post" novalidate>
+                    {% csrf_token %}
+                    <div class="field-group">
+                        <label for="recovery_key">Recovery key</label>
+                        <input id="recovery_key" name="recovery_key" type="text" autocomplete="off" maxlength="100" placeholder="Paste your recovery key" required>
+                        <p class="form-help">Your recovery key is private. MasDraw does not store it as plain text.</p>
+                    </div>
+                    <button class="button button-primary" type="submit">Claim Drawing</button>
+                </form>
+
+                <p class="auth-switch">
+                    <a href="{% url 'my_drawings' %}">Back to My Drawings</a>
+                    <span aria-hidden="true">&middot;</span>
+                    <a href="{% url 'recover_drawing' %}">Recover Drawing</a>
+                </p>
+            </div>
+        </div>
+    </section>
+{% endblock %}

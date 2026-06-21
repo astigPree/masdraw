@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block page_title %}Login | MasDraw{% endblock %}
+{% block page_description %}Login to your MasDraw account.{% endblock %}
+{% block meta_robots %}noindex,nofollow{% endblock %}
+
+{% block content %}
+    <section class="section account-section">
+        <div class="container account-shell">
+            <div class="section-heading">
+                <p class="section-kicker">MasDraw account</p>
+                <h1>Login to MasDraw.</h1>
+                <p>Login to claim drawings, manage your artworks, heart drawings, and comment on the showcase.</p>
+            </div>
+
+            <div class="auth-card card">
+                {% if messages %}
+                    <div class="flash-messages" role="status" aria-live="polite">
+                        {% for message in messages %}
+                            <p class="flash-message flash-message-{{ message.tags }}">{{ message }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                {% include "account/_login_form.html" %}
+            </div>
+        </div>
+    </section>
+{% endblock %}

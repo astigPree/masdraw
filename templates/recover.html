@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_title %}Recover Masbate Drawing - masdraw{% endblock %}
+{% block page_description %}Recover a private Masbate sketch using your recovery key. No login, no email.{% endblock %}
+{% block body_class %}recover-page{% endblock %}
+{% block meta_robots %}noindex,nofollow{% endblock %}
+{% block og_title %}Recover Masbate Drawing - masdraw{% endblock %}
+{% block og_description %}Recover a private Masbate sketch using your recovery key. No login, no email.{% endblock %}
+{% block twitter_title %}Recover Masbate Drawing - masdraw{% endblock %}
+{% block twitter_description %}Recover a private Masbate sketch using your recovery key. No login, no email.{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/recover.css' %}">
+{% endblock %}
+
+{% block content %}
+    <section class="recover-section">
+        <div class="container recover-wrap">
+            <div class="recover-card card fade-up">
+                <p class="section-kicker">Private recovery</p>
+                <h1>Recover your Masbate sketch</h1>
+                <p>Paste the pass-key you saved when the drawing was created. No account or email needed.</p>
+
+                {% for message in messages %}
+                    <p class="message message-{{ message.tags }}">{{ message }}</p>
+                {% endfor %}
+
+                <form method="post" class="recover-form">
+                    {% csrf_token %}
+                    <label for="pass_key">Recovery pass-key</label>
+                    <input id="pass_key" name="pass_key" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Paste your secret key" required autofocus>
+                    <button class="button button-primary" type="submit">Recover Drawing</button>
+                </form>
+
+                <p class="recover-note">Your pass-key unlocks only your anonymous Masbate drawing project. Keep it private.</p>
+            </div>
+        </div>
+    </section>
+{% endblock %}

@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block page_title %}Profile Picture | MasDraw{% endblock %}
+{% block page_description %}Choose a MasDraw sketch as your account profile picture.{% endblock %}
+{% block meta_robots %}noindex,nofollow{% endblock %}
+
+{% block content %}
+    <section class="section account-section">
+        <div class="container account-wide-shell">
+            <div class="section-heading split-heading">
+                <div>
+                    <p class="section-kicker">Profile picture</p>
+                    <h1>Pick a sketch avatar.</h1>
+                    <p>Choose from your claimed drawings with saved previews. Your selected image can appear publicly beside your comments.</p>
+                </div>
+                <a class="button button-secondary" href="{% url 'my_drawings' %}">My Drawings</a>
+            </div>
+
+            {% if messages %}
+                <div class="flash-messages" role="status" aria-live="polite">
+                    {% for message in messages %}
+                        <p class="flash-message flash-message-{{ message.tags }}">{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <section class="profile-picture-current card">
+                <div class="account-avatar account-avatar-large">
+                    {% if profile.profile_image %}
+                        <img src="{{ profile.profile_image }}" alt="{{ request.user.username }} profile picture">
+                    {% else %}
+                        <span>{{ request.user.username|slice:":1"|upper }}</span>
+                    {% endif %}
+                </div>
+                <div class="profile-picture-current-copy">
+                    <p class="section-kicker">Current avatar</p>
+                    {% if profile.profile_drawing %}
+                        <h2>{{ profile.profile_drawing.title|default:"Untitled Drawing" }}</h2>
+                        <p>Using this saved sketch preview as your profile picture.</p>
+                    {% else %}
+                        <h2>No sketch selected yet.</h2>
+                        <p>Select one of your saved previews below.</p>
+                    {% endif %}
+                </div>
+                {% if profile.profile_drawing %}
+                    <form method="post" action="{% url 'account_profile_picture' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="remove">
+                        <button class="button button-secondary" type="submit">Remove Picture</button>
+                    </form>
+                {% endif %}
+            </section>
+
+            {% if drawings %}
+                <div class="profile-picture-grid">
+                    {% for project in drawings %}
+                        <article class="profile-picture-option card{% if profile.profile_drawing_id == project.id %} is-selected{% endif %}">
+                            <div class="profile-picture-preview">
+                                <img src="{{ project.preview_image }}" alt="{{ project.title|default:'MasDraw sketch preview' }}" loading="lazy">
+                            </div>
+                            <div class="profile-picture-option-body">
+                                <h2 title="{{ project.title|default:'Untitled Drawing' }}">{{ project.title|default:"Untitled Drawing" }}</h2>
+                                <p>Updated {{ project.updated_at|date:"M j, Y g:i A" }}</p>
+                                {% if profile.profile_drawing_id == project.id %}
+                                    <span class="profile-picture-selected">Current Profile Picture</span>
+                                {% else %}
+                                    <form method="post" action="{% url 'account_profile_picture' %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="profile_drawing" value="{{ project.public_id }}">
+                                        <button class="button button-primary" type="submit">Use This Sketch</button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-account-state card">
+                    <h2>No saved sketch previews yet.</h2>
+                    <p>Open or create a drawing, save it with a preview, then return here to use it as your profile picture.</p>
+                    <div class="empty-profile-actions">
+                        <form method="post" action="{% url 'start_drawing' %}">
+                            {% csrf_token %}
+                            <button class="button button-primary" type="submit">Start Drawing</button>
+                        </form>
+                        <a class="button button-secondary" href="{% url 'claim_drawing' %}">Claim Drawing</a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}
